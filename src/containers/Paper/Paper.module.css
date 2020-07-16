@@ -1,0 +1,8 @@
+.Paper {
+    margin: 20px 0;
+    padding: 30px;
+    max-width: 700px;
+    width: 90%;
+    min-height: 700px;
+    background-color: #fff;
+}

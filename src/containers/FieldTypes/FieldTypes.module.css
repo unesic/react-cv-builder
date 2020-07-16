@@ -1,0 +1,24 @@
+.FieldTypes {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 50%;
+    display: flex;
+    border: 1px solid #1d3557;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #edf2f4;
+    transition: all 0.2s ease-in-out 0s;
+}
+
+.Show {
+    transform: translateX(-50%) translateY(calc(-100% - 10px)) scaleX(1);
+    opacity: 1;
+    box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.2)
+}
+
+.Hide {
+    transform: translateX(-50%) translateY(0) scaleX(0);
+    opacity: 0;
+    box-shadow: none;
+}

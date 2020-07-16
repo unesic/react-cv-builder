@@ -1,0 +1,11 @@
+.SideDrawer {
+    flex: 0 0 250px;
+    padding: 20px;
+    background-color: #1d3557;
+}
+
+@media only screen and (max-width: 767px) {
+    .SideDrawer {
+        flex-basis: 50px;
+    }
+}

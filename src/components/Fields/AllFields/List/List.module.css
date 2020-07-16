@@ -1,0 +1,28 @@
+.List {
+    color: red;
+}
+
+.List ul {
+    margin-bottom: 20px;
+}
+
+.List ul li {
+    position: relative;
+    padding-left: 20px;
+}
+
+.List ul li::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    width: 5px;
+    height: 5px;
+    background-color: red;
+}
+
+.List ul li + li {
+    margin-top: 10px;
+}

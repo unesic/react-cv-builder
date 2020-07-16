@@ -1,0 +1,83 @@
+.Button {
+    outline: unset;
+    border: unset;
+    border-radius: 5px;
+    margin: 3px;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: fit-content;
+    font-size: 0.9rem;
+    line-height: 0.6rem;
+    color: #fff;
+    filter: grayscale(1) opacity(0.4);
+    transition: all 0.2s ease 0s;
+}
+
+.TextWithIcon {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 10px;
+    font-size: 0.9rem;
+    line-height: 1rem;
+    padding: 10px 20px;
+    filter: none;
+}
+
+.TextWithIcon > svg {
+    margin-right: 5px;
+}
+
+.Edit:hover,
+.TextWithIcon.Edit {
+    background-color: var(--color-edit);
+}
+
+.Beautify:hover {
+    background-color: #457b9d;
+}
+
+.Save:hover,
+.TextWithIcon.Save {
+    background-color: var(--color-save);
+}
+
+.Cancel:hover,
+.TextWithIcon.Cancel {
+    background-color: var(--color-cancel);
+}
+
+.Delete:hover,
+.TextWithIcon.Delete {
+    background-color: var(--color-delete);
+}
+
+.Add {
+    filter: opacity(0.8);
+    background-color: #2a9d8f;
+}
+
+.Active {
+    filter: opacity(1);
+}
+
+.Button:hover {
+    filter: unset;
+}
+
+.Button:active {
+    transform: scale(0.9);
+}
+
+.FieldButton {
+    margin: 3px 10px;
+    padding: 4px;
+    background-color: #457b9d;
+    font-size: 1.1rem;
+}
+
+.Default {
+    padding: 5px 10px;
+    background-color: var(--color-save);
+    font-size: 1rem;
+    line-height: 1.2rem;
+}

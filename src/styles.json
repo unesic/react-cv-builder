@@ -1,0 +1,169 @@
+{
+	"display": {
+		"margin": {
+			"label": "Margin",
+			"values": {
+				"marginTop": {
+					"label": "Top",
+					"value": ""
+				},
+				"marginRight": {
+					"label": "Right",
+					"value": ""
+				},
+				"marginBottom": {
+					"label": "Bottom",
+					"value": ""
+				},
+				"marginLeft": {
+					"label": "Left",
+					"value": ""
+				}
+			}
+		},
+		"border": {
+			"label": "Border",
+			"values": {
+				"borderTopWidth": {
+					"label": "Top",
+					"value": ""
+				},
+				"borderRightWidth": {
+					"label": "Right",
+					"value": ""
+				},
+				"borderBottomWidth": {
+					"label": "Bottom",
+					"value": ""
+				},
+				"borderLeftWidth": {
+					"label": "Top",
+					"value": ""
+				},
+				"borderStyle": {
+					"label": "Style",
+					"value": ""
+				},
+				"borderColor": {
+					"label": "Color",
+					"value": ""
+				}
+			}
+		},
+		"borderRadius": {
+			"label": "Border radius",
+			"values": {
+				"borderTopLeftRadius": {
+					"label": "Top left",
+					"value": ""
+				},
+				"borderTopRightRadius": {
+					"label": "Top right",
+					"value": ""
+				},
+				"borderBottomRightRadius": {
+					"label": "Bottom right",
+					"value": ""
+				},
+				"borderBottomLeftRadius": {
+					"label": "Bottom left",
+					"value": ""
+				}
+			}
+		},
+		"padding": {
+			"label": "Padding",
+			"values": {
+				"paddingTop": {
+					"label": "Top",
+					"value": ""
+				},
+				"paddingRight": {
+					"label": "Right",
+					"value": ""
+				},
+				"paddingBottom": {
+					"label": "Bottom",
+					"value": ""
+				},
+				"paddingLeft": {
+					"label": "Left",
+					"value": ""
+				}
+			}
+		},
+		"size": {
+			"label": "Size",
+			"values": {
+				"width": {
+					"label": "Width",
+					"value": ""
+				},
+				"height": {
+					"label": "Height",
+					"value": ""
+				}
+			}
+		},
+		"background": {
+			"label": "Background",
+			"values": {
+				"backgroundColor": {
+					"label": "Color",
+					"value": ""
+				},
+				"backgroundImage": {
+					"label": "Image",
+					"value": ""
+				},
+				"backgroundSize": {
+					"label": "Size",
+					"value": ""
+				},
+				"backgroundPositionX": {
+					"label": "Position X",
+					"value": ""
+				},
+				"backgroundPositionY": {
+					"label": "Position Y",
+					"value": ""
+				},
+				"backgroundRepeat": {
+					"label": "Repeat",
+					"value": ""
+				}
+			}
+		}
+	},
+	"typography": {
+		"typography": {
+			"label": "",
+			"values": {
+				"fontSize": {
+					"label": "Font Size",
+					"value": ""
+				},
+				"lineHeight": {
+					"label": "Line Height",
+					"value": ""
+				},
+				"fontWeight": {
+					"label": "Font Weight",
+					"value": ""
+				},
+				"letterSpacing": {
+					"label": "Letter Spacing",
+					"value": ""
+				},
+				"color": {
+					"label": "Color",
+					"value": ""
+				},
+				"textAlign": {
+					"label": "Text Align",
+					"value": ""
+				}
+			}
+		}
+	}
+}

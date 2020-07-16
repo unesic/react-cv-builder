@@ -1,0 +1,47 @@
+.Fieldset {
+    position: relative;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.Label {
+    position: absolute;
+    top: -5px;
+    left: 20px;
+    padding: 0 5px;
+    background-color: #fff;
+    font-weight: 600;
+    font-size: 0.7rem;
+    line-height: 0.9rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    color: #676767;
+    transform: translateY(15px);
+    transition: all 0.2s ease;
+}
+
+.Fieldset.Empty .Text:focus ~ .Label,
+.Fieldset:not(.Empty) .Label {
+    font-size: 0.5rem;
+    line-height: 0.7rem;
+    transform: translateY(0);
+}
+
+.Text,
+.TextArea {
+    outline: unset;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 8px 10px;
+    width: 100%;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 1em;
+    color: inherit;
+}
+
+.Text:focus,
+.TextArea:focus {
+    border-color: transparent;
+    box-shadow: 0 0 3px 0 var(--color-edit);
+}

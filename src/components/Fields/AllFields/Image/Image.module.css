@@ -1,0 +1,14 @@
+.Image {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.Image img {
+    max-width: 100%;
+}
+
+.Thumbnail {
+    opacity: 0.5;
+    margin-top: 10px;
+}
