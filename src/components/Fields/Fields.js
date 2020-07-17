@@ -6,14 +6,16 @@ import SingleField from './SingleField/SingleField';
 
 const Fields = _ => {
 	return (
-		<BuilderContext.Consumer>
-			{context => context.fields ? context.fields.map((field, i) => (
-				<SingleField
-					key={field.id}
-					index={i}
-					properties={{...field}} />
-			)) : null }
-		</BuilderContext.Consumer>
+		<div className={styles.Fields}>
+			<BuilderContext.Consumer>
+				{context => context.fields ? context.fields.map((field, i) => (
+					<SingleField
+						key={field.id}
+						index={i}
+						properties={{...field}} />
+				)) : null }
+			</BuilderContext.Consumer>
+		</div>
 	);
 }
  

@@ -38,7 +38,10 @@ const FieldButtons = ({ fieldId, onEdit, onSave, onCancel, onDelete, onBeautify,
 	);
 
 	return (
-		<div className={`${styles.FieldButtons} ${editing ? styles.Editing : ''}`}>
+		<div className={[
+			styles.FieldButtons,
+			editing ? styles.Editing : ''
+		].join(' ')}>
 			<React.Fragment>
 				<Button
 					type='Beautify'

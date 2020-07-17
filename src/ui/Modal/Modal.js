@@ -6,18 +6,21 @@ import { FiX } from 'react-icons/fi';
 import Backdrop from './Backdrop/Backdrop';
 
 const Modal = ({ isVisible, backdropClicked, children }) => {
-	const classes = `
-		${styles.Modal}
-		${isVisible ?
-		styles.Show : styles.Hide}
-	`;
-
 	return (
 		<React.Fragment>
-			<div className={classes}>
+			<div className={[
+				styles.Modal,
+				isVisible ? styles.Show : styles.Hide
+			].join(' ')}>
 				{children}
 			</div>
-			<div className={`${isVisible ? styles.Show : styles.Hide} ${styles.ModalClose}`} onClick={backdropClicked}>
+			<div
+				className={[
+					isVisible ? styles.Show : styles.Hide,
+					styles.ModalClose
+				].join(' ')}
+				onClick={backdropClicked}
+			>
 				<FiX />
 			</div>
 			<Backdrop

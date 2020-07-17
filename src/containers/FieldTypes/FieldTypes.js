@@ -6,13 +6,11 @@ import { FiType, FiImage, FiList } from 'react-icons/fi';
 import Button from '../../ui/Button/Button';
 
 const FieldTypes = ({show, newFieldHandler}) => {
-	const classes = `
-		${styles.FieldTypes}
-		${show ? styles.Show : styles.Hide}
-	`;
-
 	return (
-		<div className={classes}>
+		<div className={[
+			styles.FieldTypes,
+			show ? styles.Show : styles.Hide
+		].join(' ')}>
 			<Button
 				FieldButton
 				type='Add'

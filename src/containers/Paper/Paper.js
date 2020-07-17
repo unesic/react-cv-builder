@@ -8,7 +8,10 @@ const Paper = ({ children }) => {
 		<Droppable droppableId={'paper'}>
 			{(provided, snapshot) => (
 				<div
-					className={`${styles.Paper} ${snapshot.isDraggingOver ? styles.IsDraggingOver : ''}`}
+					className={[
+						styles.Paper,
+						snapshot.isDraggingOver ? styles.IsDraggingOver : ''
+					].join(' ')}
 					ref={provided.innerRef}
 					{...provided.droppableProps}
 				>

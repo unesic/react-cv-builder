@@ -2,14 +2,14 @@ import React from 'react';
 import styles from './Button.module.css';
 
 const Button = ({ TextWithIcon, FieldButton, Active, type, customStyles, clicked, children }) => {
-	const classes = `
-		${styles.Button}
-		${Active ? styles.Active : ''}
-		${styles[type]}
-		${customStyles}
-		${TextWithIcon ? styles.TextWithIcon : ''}
-		${FieldButton ? styles.FieldButton : ''}
-	`;
+	const classes = [
+		styles.Button,
+		Active ? styles.Active : '',
+		styles[type],
+		customStyles,
+		TextWithIcon ? styles.TextWithIcon : '',
+		FieldButton ? styles.FieldButton : '',
+	].join(' ');
 	
 	return (
 		<button

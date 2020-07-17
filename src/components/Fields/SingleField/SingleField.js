@@ -88,34 +88,31 @@ const SingleField = ({ index, properties }) => {
 	return (
 		<Draggable draggableId={`field-${properties.id}`} index={index}>
 			{(provided, snapshot) => (
-				<div
-					{...provided.draggableProps}
-					{...provided.dragHandleProps}
-					ref={provided.innerRef}
-				>
-					<BuilderContext.Consumer>
-						{context => (
-							<div
-								className={`
-									${styles.SingleField}
-									${editing ? styles.Editing : ''}
-									${snapshot.isDragging ? styles.IsDragging : ''}
-								`}
-								style={advancedStyleParser(properties.styles)}
-							>
-								{allFields[properties.type]}
-								<FieldButtons
-									fieldId={properties.id}
-									onEdit={editHandler}
-									onSave={saveHandler}
-									onCancel={cancelHandler}
-									onDelete={context.deleteFieldHandler}
-									onBeautify={context.beautifyFieldHandler}
-									editing={editing} />
-							</div>
-						)}
-					</BuilderContext.Consumer>
-				</div>
+				<BuilderContext.Consumer>
+					{context => (
+						<div
+							className={[
+								styles.SingleField,
+								editing ? styles.Editing : null,
+								snapshot.isDragging ? styles.IsDragging : null
+							].join(' ')}
+							style={advancedStyleParser(properties.styles)}
+							{...provided.draggableProps}
+							{...provided.dragHandleProps}
+							ref={provided.innerRef}
+						>
+							{allFields[properties.type]}
+							<FieldButtons
+								fieldId={properties.id}
+								onEdit={editHandler}
+								onSave={saveHandler}
+								onCancel={cancelHandler}
+								onDelete={context.deleteFieldHandler}
+								onBeautify={context.beautifyFieldHandler}
+								editing={editing} />
+						</div>
+					)}
+				</BuilderContext.Consumer>
 			)}
 		</Draggable>
 	);

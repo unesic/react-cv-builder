@@ -2,12 +2,11 @@ import React from 'react';
 import styles from './InputFields.module.css';
 
 const Fieldset = ({ value, children }) => {
-	const classes = `
-	${styles.Fieldset}
-	${value ? '' : styles.Empty }`;
-	
 	return (
-		<fieldset className={classes}>
+		<fieldset className={[
+			styles.Fieldset,
+			!value ? styles.Empty : ''
+		].join(' ')}>
 			{children}
 		</fieldset>
 	);
