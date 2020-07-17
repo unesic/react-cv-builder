@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
+
 import styles from './SingleField.module.css';
 import BuilderContext from '../../../containers/Builder/context/builder-context';
 
@@ -9,7 +11,7 @@ import Text from '../AllFields/Text/Text';
 import Image from '../AllFields/Image/Image';
 import List from '../AllFields/List/List';
 
-const SingleField = ({ properties }) => {
+const SingleField = ({ index, properties }) => {
 	const [editing, setEditing] = useState(true);
 	const [data, setData] = useState(undefined);
 	const [snapshotData, setSnapshotData] = useState(null);
@@ -84,23 +86,38 @@ const SingleField = ({ properties }) => {
 	};
 
 	return (
-		<BuilderContext.Consumer>
-			{context => (
+		<Draggable draggableId={`field-${properties.id}`} index={index}>
+			{(provided, snapshot) => (
 				<div
-					className={`${styles.SingleField} ${context.modifying === properties.id ? styles.Editing : ''}`}
-					style={advancedStyleParser(properties.styles)}>
-					{allFields[properties.type]}
-					<FieldButtons
-						fieldId={properties.id}
-						onEdit={editHandler}
-						onSave={saveHandler}
-						onCancel={cancelHandler}
-						onDelete={context.deleteFieldHandler}
-						onBeautify={context.beautifyFieldHandler}
-						editing={editing} />
+					{...provided.draggableProps}
+					{...provided.dragHandleProps}
+					ref={provided.innerRef}
+				>
+					<BuilderContext.Consumer>
+						{context => (
+							<div
+								className={`
+									${styles.SingleField}
+									${editing ? styles.Editing : ''}
+									${snapshot.isDragging ? styles.IsDragging : ''}
+								`}
+								style={advancedStyleParser(properties.styles)}
+							>
+								{allFields[properties.type]}
+								<FieldButtons
+									fieldId={properties.id}
+									onEdit={editHandler}
+									onSave={saveHandler}
+									onCancel={cancelHandler}
+									onDelete={context.deleteFieldHandler}
+									onBeautify={context.beautifyFieldHandler}
+									editing={editing} />
+							</div>
+						)}
+					</BuilderContext.Consumer>
 				</div>
 			)}
-		</BuilderContext.Consumer>
+		</Draggable>
 	);
 }
  

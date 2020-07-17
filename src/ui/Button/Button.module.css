@@ -9,7 +9,6 @@
     font-size: 0.9rem;
     line-height: 0.6rem;
     color: #fff;
-    filter: grayscale(1) opacity(0.4);
     transition: all 0.2s ease 0s;
 }
 
@@ -27,26 +26,26 @@
     margin-right: 5px;
 }
 
-.Edit:hover,
+.Edit,
 .TextWithIcon.Edit {
     background-color: var(--color-edit);
 }
 
-.Beautify:hover {
+.Beautify {
     background-color: #457b9d;
 }
 
-.Save:hover,
+.Save,
 .TextWithIcon.Save {
     background-color: var(--color-save);
 }
 
-.Cancel:hover,
+.Cancel,
 .TextWithIcon.Cancel {
     background-color: var(--color-cancel);
 }
 
-.Delete:hover,
+.Delete,
 .TextWithIcon.Delete {
     background-color: var(--color-delete);
 }

@@ -5,8 +5,3 @@
     align-items: center;
     background-color: #eeeeee;
 }
-
-.FieldsWrapper {
-    display: flex;
-    flex-wrap: wrap;
-}

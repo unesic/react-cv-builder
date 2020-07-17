@@ -38,10 +38,11 @@ const FieldButtons = ({ fieldId, onEdit, onSave, onCancel, onDelete, onBeautify,
 	);
 
 	return (
-		<div className={`${styles.FieldButtons}`}>
+		<div className={`${styles.FieldButtons} ${editing ? styles.Editing : ''}`}>
 			<React.Fragment>
 				<Button
 					type='Beautify'
+					customStyles={editing ? styles.Editing : ''}
 					clicked={_ => onBeautify(fieldId)}>
 						<FiDroplet />
 					</Button>

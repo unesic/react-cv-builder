@@ -1,25 +1,47 @@
 .SingleField {
     position: relative;
-    margin-bottom: 50px;
+    border-radius: 5px;
+    margin-bottom: 15px;
     padding: 15px;
     width: 100%;
     height: fit-content;
 }
 
-.SingleField::before {
+.SingleField::after {
     content: '';
     position: absolute;
+    z-index: 1;
     top: 0;
     left: 0;
-    border: 1px dashed rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     width: 100%;
     height: 100%;
+    background-color: var(--color-save);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
     opacity: 0;
     transition: all 0.2s ease 0s;
 }
 
-.SingleField:hover::before,
-.Editing::before {
+.SingleField:hover::after {
+    opacity: 0.3;
+}
+
+.SingleField [class*=FieldButtons] {
+    opacity: 0.3;
+    filter: grayscale(1);
+}
+
+.SingleField:hover [class*=FieldButtons] {
     opacity: 1;
+    filter: grayscale(0);
+}
+
+.Editing:hover::after,
+.Editing::after {
+    z-index: -1;
+    opacity: 0;
+}
+
+.IsDragging::after {
+    opacity: 0.6;
 }

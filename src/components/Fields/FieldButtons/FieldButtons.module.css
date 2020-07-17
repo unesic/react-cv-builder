@@ -1,7 +1,22 @@
 .FieldButtons {
     position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.2s ease-in-out 0s;
+}
+
+.FieldButtons.Editing {
     top: -15px;
-    left: 20px;
-    padding: 0 5px;
-    background-color: #fff;
+    left: 15px;
+    transform: unset;
+}
+
+.FieldButtons > button {
+    opacity: 0.7;
+}
+
+.FieldButtons > button:hover {
+    opacity: 1;
 }

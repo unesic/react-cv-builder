@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Builder.module.css';
 import BuilderContext from './context/builder-context';
+import { DragDropContext} from 'react-beautiful-dnd';
 
 import Paper from '../Paper/Paper';
 import Fields from '../../components/Fields/Fields';
@@ -108,6 +109,17 @@ const Builder = _ => {
 		setFields(newFields);
 	}
 
+	const onDragEnd = result => {
+		if (!result.destination) {
+			return;
+		}
+
+		const newFields = [...fields];
+		const [removed] = newFields.splice(result.source.index, 1);
+		newFields.splice(result.destination.index, 0, removed);
+		setFields(newFields);
+	}
+
 	return (
 		<BuilderContext.Provider
 			value={{
@@ -120,22 +132,21 @@ const Builder = _ => {
 				beautifyFieldHandler: beautifyFieldHandler,
 				deleteFieldHandler: deleteFieldHandler,
 				addNewFieldHandler: addNewFieldHandler,
-				saveProperties: saveProperties,
-			}}>
+				saveProperties: saveProperties }}>
 			<div className={styles.Builder}>
-				<Paper>
-					<div className={styles.FieldsWrapper}>
+				<DragDropContext onDragEnd={onDragEnd}>
+					<Paper>
 						<Fields />
-					</div>
-					<AddNewField />
-				</Paper>
+						<AddNewField />
+					</Paper>
+				</DragDropContext>
 
 				<Modal
 					isVisible={modalOpen}
 					backdropClicked={_ => setModalOpen(false)}>
 					<ModalContent />
 				</Modal>
-			</div>	
+			</div>
 		</BuilderContext.Provider>
 	);
 }
