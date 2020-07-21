@@ -9,7 +9,7 @@ const Text = ({ fieldData, onKeyDownHandler, onKeyUpHandler, onChangeHandler, ed
         if (fieldData) {
             const items = fieldData.split('\n');
             const data = items.map((item, i) => (
-				<span key={i} className={styles.NewLine}>{item}</span>
+				<React.Fragment key={i}>{item}<br /></React.Fragment>
 			));
             
             return data;

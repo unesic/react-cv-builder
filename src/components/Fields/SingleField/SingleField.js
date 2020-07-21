@@ -93,23 +93,28 @@ const SingleField = ({ index, properties }) => {
 						<div
 							className={[
 								styles.SingleField,
-								editing ? styles.Editing : null,
-								snapshot.isDragging ? styles.IsDragging : null
+								editing && styles.Editing,
+								snapshot.isDragging && styles.IsDragging
 							].join(' ')}
-							style={advancedStyleParser(properties.styles)}
 							{...provided.draggableProps}
 							{...provided.dragHandleProps}
 							ref={provided.innerRef}
 						>
-							{allFields[properties.type]}
-							<FieldButtons
-								fieldId={properties.id}
-								onEdit={editHandler}
-								onSave={saveHandler}
-								onCancel={cancelHandler}
-								onDelete={context.deleteFieldHandler}
-								onBeautify={context.beautifyFieldHandler}
-								editing={editing} />
+							<div
+								className={styles.Inner}
+								style={!snapshot.isDragging ? advancedStyleParser(properties.styles) : null}
+							>
+
+								{allFields[properties.type]}
+								<FieldButtons
+									fieldId={properties.id}
+									onEdit={editHandler}
+									onSave={saveHandler}
+									onCancel={cancelHandler}
+									onDelete={context.deleteFieldHandler}
+									onBeautify={context.beautifyFieldHandler}
+									editing={editing} />
+							</div>
 						</div>
 					)}
 				</BuilderContext.Consumer>

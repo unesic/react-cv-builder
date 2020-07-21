@@ -5,11 +5,16 @@
 }
 
 .Image img {
-    max-width: 100%;
     display: block;
+    width: 100%;
+    height: auto;
 }
 
 .Thumbnail {
     opacity: 0.5;
     margin-top: 10px;
+}
+
+.ImageInner {
+    max-width: 100%;
 }

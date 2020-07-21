@@ -15,7 +15,11 @@ const Image = ({ fieldData, onKeyPressHandler, onChangeHandler, editing }) => {
 						autoFocus />
 					<img src={fieldData} alt='' className={styles.Thumbnail} />
 				</React.Fragment>
-				) : <img src={fieldData} alt='' />}
+				) : (
+					<div className={styles.ImageInner}>
+						<img src={fieldData} alt='' />
+					</div>
+				)}
 		</div>
 	);
 }

@@ -10,6 +10,7 @@ const Tabs = ({ fields, properties, propertyChangeHandler, activeTab, switchTabH
 	const tabsButtons = (
 		fields ? Object.keys(fields).map((fKey, i) => (
 			<Button
+				key={i}
 				Active={activeTab === i}
 				type='Default'
 				customStyles={styles.TabButton}
@@ -19,7 +20,7 @@ const Tabs = ({ fields, properties, propertyChangeHandler, activeTab, switchTabH
 
 	const tabsContent = (
 		fields ? Object.keys(fields).map((fKey, i) => (
-				<div className={activeTab === i ? styles.Display : styles.Hide }>
+				<div key={i} className={activeTab === i ? styles.Display : styles.Hide }>
 					{Object.keys(fields[fKey]).map(pKey => {
 							const group = fields[fKey][pKey];
 							return (
