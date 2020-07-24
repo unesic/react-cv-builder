@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Builder.module.css';
+
 import BuilderContext from './context/builder-context';
 import { DragDropContext} from 'react-beautiful-dnd';
 
+import AddNew from '../../components/AddNew/AddNew';
+import Section from '../../components/Section/Section';
+
 import Paper from '../Paper/Paper';
-import Fields from '../../components/Fields/Fields';
+// import Fields from '../../components/Fields/Fields';
 import * as fieldStyles from '../../components/Fields/styles/fieldStyles';
 import UpdatedFields from '../../components/Fields/UpdatedFields/UpdatedFields';
-import AddNewField from '../../components/AddNewField/AddNewField';
+// import AddNewField from '../../components/AddNewField/AddNewField';
 import Modal from '../../ui/Modal/Modal';
 import ModalContent from '../../components/ModalContent/ModalContent';
 
@@ -18,24 +22,84 @@ const Builder = _ => {
 	const [modifying, setModifying] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [modalFields, setModalFields] = useState([]);
-	const [modalProperties, setModalProperties] = useState({});
+    const [modalProperties, setModalProperties] = useState({});
+    
+
+	const [activeField, setActiveField] = useState();
+	const [sections, setSections] = useState([]);
+	const [parsedSections, setParsedSections] = useState([]);
+
+	useEffect(() => {
+		const newParsedSections = [];
+		sections.forEach(section => {
+			newParsedSections.push(<Section key={section.id} {...section} />)
+		})
+
+		setParsedSections(newParsedSections);
+	}, [sections]);
+
+	useEffect(() => {
+		!modalOpen && setModifying(null)
+	}, [modalOpen]);
+
+    const newContainerHandler = _ => {
+        const newSections = [
+            ...sections,
+            {
+                id: 'section-id-' + new Date().valueOf(),
+                columns: [],
+                setSectionData: setSectionData
+            }
+        ];
+        
+        setSections(newSections);
+    }
+
+    const setSectionData = (id, newData) => {
+		const newSections = sections.map(section => ({...section}));
+		const current = newSections.find(section => section.id === id);
+		const old = sections.find(section => section.id === id);
+		const index = newSections.indexOf(current);
+		current.columns = [...newData];
+		newSections[index] = current;
+
+		if (old.columns !== current.columns) {
+			setSections(newSections);
+		}
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 	// Upon clicking the 'modify' button, prepare properties for modal 
 	useEffect(_ => {
 		if (modifying !== null) {
+			const fields = [];
+			sections.forEach(section => {
+				[...section.columns].forEach(column => {
+					[...column.fields].forEach(field => { fields.push(field) })
+				})
+			})
 			const activeField = fields.find(field => field.id === modifying);
-			setModalProperties(activeField ? {...activeField.styles} : null);
+			setModalProperties(activeField ? activeField.customStyles : null);
+			setActiveField(activeField);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [modifying]);
 
 	// Updates modal fields when modal properties change 
 	useEffect(_ => {
-		const activeField = fields.find(field => field.id === modifying);
-
 		const updatedFields = (
 			<UpdatedFields
-				fields={activeField ? {...activeField.styles} : null}
+				fields={activeField ? {...activeField.customStyles} : null}
 				properties={{...modalProperties}}
 				propertyChangeHandler={propertyChangeHandler} />
 		);
@@ -84,18 +148,21 @@ const Builder = _ => {
 
 	// Saves the properties from input fields on modal and closes the modal
 	const saveProperties = _ => {
-		const oldFields = [...fields];
-		const activeField = oldFields.find(field => field.id === modifying);
+		const updatedActiveField = {...activeField};
+		updatedActiveField.customStyles = {...modalProperties};
 
-		const newFields = oldFields.map(field => {
-			if (field === activeField) {
-				field.styles = {...modalProperties}
-			}
-
-			return field;
+		const newSections = [...sections];
+		newSections.forEach(section => {
+			section.columns.forEach(column => {
+				column.fields.forEach(field => {
+					if (field.id === updatedActiveField.id) {
+						field.customStyles = {...updatedActiveField.customStyles}
+					}
+				})
+			})
 		})
 
-		setFields(newFields);
+		setSections(newSections);
 		setModalOpen(false);
 		setModifying(null);
 	}
@@ -123,21 +190,28 @@ const Builder = _ => {
 	return (
 		<BuilderContext.Provider
 			value={{
-				fields: fields,
+				// fields: fields,
 				modalFields: modalFields,
-				showFieldTypes: showFieldTypes,
-				modifying: modifying,
-				setModalOpen: setModalOpen,
-				setShowFieldTypes: setShowFieldTypes,
+				// showFieldTypes: showFieldTypes,
+				// modifying: modifying,
+				// setModalOpen: setModalOpen,
+				// setShowFieldTypes: setShowFieldTypes,
 				beautifyFieldHandler: beautifyFieldHandler,
-				deleteFieldHandler: deleteFieldHandler,
-				addNewFieldHandler: addNewFieldHandler,
-				saveProperties: saveProperties }}>
+				// deleteFieldHandler: deleteFieldHandler,
+				// addNewFieldHandler: addNewFieldHandler,
+                saveProperties: saveProperties,
+				
+                setSectionData: setSectionData,
+			}}
+		>
 			<div className={styles.Builder}>
 				<DragDropContext onDragEnd={onDragEnd}>
 					<Paper>
-						<Fields />
-						<AddNewField />
+						{/* <Fields /> */}
+						{/* <AddNewField /> */}
+
+                        {parsedSections ? parsedSections : null}
+                        <AddNew clicked={newContainerHandler} />
 					</Paper>
 				</DragDropContext>
 

@@ -5,7 +5,7 @@ import { FiEdit, FiDroplet, FiTrash, FiSave, FiX  } from 'react-icons/fi';
 
 import Button from '../../../ui/Button/Button';
 
-const FieldButtons = ({ fieldId, onEdit, onSave, onCancel, onDelete, onBeautify, editing }) => {
+const FieldButtons = ({ id, onEdit, onSave, onCancel, onDelete, onBeautify, editing }) => {
 	const buttons = (
 		<React.Fragment>
 			<Button
@@ -14,9 +14,9 @@ const FieldButtons = ({ fieldId, onEdit, onSave, onCancel, onDelete, onBeautify,
 					<FiEdit />
 				</Button>
 			<Button
-				parentFieldId={fieldId}
+				parentFieldId={id}
 				type='Delete'
-				clicked={_ => onDelete(fieldId)}>
+				clicked={_ => onDelete(id)}>
 					<FiTrash/>
 				</Button>
 		</React.Fragment>
@@ -46,7 +46,7 @@ const FieldButtons = ({ fieldId, onEdit, onSave, onCancel, onDelete, onBeautify,
 				<Button
 					type='Beautify'
 					customStyles={editing ? styles.Editing : ''}
-					clicked={_ => onBeautify(fieldId)}>
+					clicked={_ => onBeautify(id)}>
 						<FiDroplet />
 					</Button>
 				{editing ? editingButtons : buttons}
