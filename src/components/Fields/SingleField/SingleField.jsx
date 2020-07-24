@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
-
+import React, { useState, useEffect, useContext } from 'react';
 import styles from './SingleField.module.css';
-import BuilderContext from '../../../containers/Builder/context/builder-context';
 
+import builderContext from '../../../containers/Builder/context/builder-context';
+import columnContext from '../../Column/column-context';
 import advancedStyleParser from '../../../advancedStyleParser/advancedStyleParser';
 
 import FieldButtons from '../FieldButtons/FieldButtons';
@@ -11,21 +10,15 @@ import Text from '../AllFields/Text/Text';
 import Image from '../AllFields/Image/Image';
 import List from '../AllFields/List/List';
 
-const SingleField = ({ index, properties }) => {
+const SingleField = ({ id, data, type, customStyles }) => {
 	const [editing, setEditing] = useState(true);
-	const [data, setData] = useState(undefined);
 	const [snapshotData, setSnapshotData] = useState(null);
+	const BuilderContext = useContext(builderContext);
+	const ColumnContext = useContext(columnContext);
 
 	useEffect(_ => {
-		const defaultData = {
-			text: 'Simple text field',
-			list: 'List item',
-			image: 'https://picsum.photos/500/100'
-		}
-
-		setData(defaultData[properties.type]);
-		setSnapshotData(defaultData[properties.type]);
-	}, [properties.type]);
+			setSnapshotData(data);
+	}, [data, setSnapshotData]);
 
 	const editHandler = _ => {
 		setEditing(true);
@@ -39,15 +32,14 @@ const SingleField = ({ index, properties }) => {
 
 	const cancelHandler = _ => {
 		setEditing(false);
-		setData(snapshotData);
+		ColumnContext.setFieldData(id, snapshotData);
 	}
 
 	const onDataChangeHandler = e => {
-		setData(e.target.value);
+		ColumnContext.setFieldData(id, e.target.value);
 	}
 	
 	let keysPressed = {};
-
 	const onKeyUpHandler = e => {
 		delete keysPressed[e.key];
 	}
@@ -86,40 +78,27 @@ const SingleField = ({ index, properties }) => {
 	};
 
 	return (
-		<Draggable draggableId={`field-${properties.id}`} index={index}>
-			{(provided, snapshot) => (
-				<BuilderContext.Consumer>
-					{context => (
-						<div
-							className={[
-								styles.SingleField,
-								editing && styles.Editing,
-								snapshot.isDragging && styles.IsDragging
-							].join(' ')}
-							{...provided.draggableProps}
-							{...provided.dragHandleProps}
-							ref={provided.innerRef}
-						>
-							<div
-								className={styles.Inner}
-								style={!snapshot.isDragging ? advancedStyleParser(properties.styles) : null}
-							>
-
-								{allFields[properties.type]}
-								<FieldButtons
-									fieldId={properties.id}
-									onEdit={editHandler}
-									onSave={saveHandler}
-									onCancel={cancelHandler}
-									onDelete={context.deleteFieldHandler}
-									onBeautify={context.beautifyFieldHandler}
-									editing={editing} />
-							</div>
-						</div>
-					)}
-				</BuilderContext.Consumer>
-			)}
-		</Draggable>
+		<div
+			className={[
+				styles.SingleField,
+				editing && styles.Editing,
+			].join(' ')}
+		>
+			<div
+				className={styles.Inner}
+				style={advancedStyleParser(customStyles)}
+			>
+				{allFields[type]}
+				<FieldButtons
+					id={id}
+					onEdit={editHandler}
+					onSave={saveHandler}
+					onCancel={cancelHandler}
+					onDelete={ColumnContext.deleteFieldHandler}
+					onBeautify={BuilderContext.beautifyFieldHandler}
+					editing={editing} />
+			</div>
+		</div>
 	);
 }
  

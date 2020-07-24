@@ -5,8 +5,8 @@ import SectionContext from '../Section/section-context';
 import ColumnContext from './column-context';
 import * as fieldStyles from '../../components/Fields/styles/fieldStyles';
 
-import NewSingleField from '../../components/Fields/SingleField/NewSingleField';
-import NewAddNewField from '../../components/AddNewField/NewAddNewField';
+import SingleField from '../../components/Fields/SingleField/SingleField';
+import AddNewField from '../../components/AddNewField/AddNewField';
 
 const Column = ({ id, fields }) => {
 	const [showFieldTypes, setShowFieldTypes] = useState(false);
@@ -30,7 +30,7 @@ const Column = ({ id, fields }) => {
 	useEffect(_ => {
 		if(isMounted.current) {
 			const parsed = data.length > 0 ? data.map(field => (
-				<NewSingleField
+				<SingleField
 					key={field.id}
 					{...field}
 				/>
@@ -91,7 +91,7 @@ const Column = ({ id, fields }) => {
 		>
 			<Col style={{backgroundColor: '#ccc8'}}>
 				{parsedFields ? parsedFields : null}
-				<NewAddNewField />
+				<AddNewField />
 			</Col>
 		</ColumnContext.Provider>
 	);

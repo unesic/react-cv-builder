@@ -8,23 +8,16 @@ import AddNew from '../../components/AddNew/AddNew';
 import Section from '../../components/Section/Section';
 
 import Paper from '../Paper/Paper';
-// import Fields from '../../components/Fields/Fields';
-import * as fieldStyles from '../../components/Fields/styles/fieldStyles';
 import UpdatedFields from '../../components/Fields/UpdatedFields/UpdatedFields';
-// import AddNewField from '../../components/AddNewField/AddNewField';
 import Modal from '../../ui/Modal/Modal';
 import ModalContent from '../../components/ModalContent/ModalContent';
 
 const Builder = _ => {
-	const [showFieldTypes, setShowFieldTypes] = useState(false);
-	const [newFieldId, setNewFieldId] = useState(0);
 	const [fields, setFields] = useState([]);
 	const [modifying, setModifying] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [modalFields, setModalFields] = useState([]);
     const [modalProperties, setModalProperties] = useState({});
-    
-
 	const [activeField, setActiveField] = useState();
 	const [sections, setSections] = useState([]);
 	const [parsedSections, setParsedSections] = useState([]);
@@ -41,43 +34,6 @@ const Builder = _ => {
 	useEffect(() => {
 		!modalOpen && setModifying(null)
 	}, [modalOpen]);
-
-    const newContainerHandler = _ => {
-        const newSections = [
-            ...sections,
-            {
-                id: 'section-id-' + new Date().valueOf(),
-                columns: [],
-                setSectionData: setSectionData
-            }
-        ];
-        
-        setSections(newSections);
-    }
-
-    const setSectionData = (id, newData) => {
-		const newSections = sections.map(section => ({...section}));
-		const current = newSections.find(section => section.id === id);
-		const old = sections.find(section => section.id === id);
-		const index = newSections.indexOf(current);
-		current.columns = [...newData];
-		newSections[index] = current;
-
-		if (old.columns !== current.columns) {
-			setSections(newSections);
-		}
-    }
-
-
-
-
-
-
-
-
-
-
-
 
 	// Upon clicking the 'modify' button, prepare properties for modal 
 	useEffect(_ => {
@@ -108,31 +64,41 @@ const Builder = _ => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [modalProperties]);
 
-	// Adds a new field on button click and closes the fields pop-up
-	const addNewFieldHandler = type => {
-		const newFields = [
-			...fields,
-			{
-				id: newFieldId,
-				type: type,
-				styles: {
-					...fieldStyles[type],
-				}
-			}
-		];
+	// Handles adding new sections
+    const newContainerHandler = _ => {
+        const newSections = [
+            ...sections,
+            {
+                id: 'section-id-' + new Date().valueOf(),
+                columns: [],
+                setSectionData: setSectionData
+            }
+        ];
+        
+        setSections(newSections);
+    }
 
-		setFields(newFields);
-		setNewFieldId(newFieldId+1);
-		setShowFieldTypes(false);
-	}
+	// Handles all the updates on section as well its children elements
+    const setSectionData = (id, newData) => {
+		const newSections = sections.map(section => ({...section}));
+		const current = newSections.find(section => section.id === id);
+		const old = sections.find(section => section.id === id);
+		const index = newSections.indexOf(current);
+		current.columns = [...newData];
+		newSections[index] = current;
 
-	// Sets a currently field that's being edited and opens a modal
+		if (old.columns !== current.columns) {
+			setSections(newSections);
+		}
+    }
+
+	// Sets a field that's being edited currently and opens a modal
 	const beautifyFieldHandler = id => {
 		setModifying(id);
 		setModalOpen(true);
 	}
 
-	// On field input, update the properties state
+	// On field input, update the modal properties state
 	const propertyChangeHandler = e => {
 		const stringify = JSON.stringify({...modalProperties})
 		const regex = new RegExp(/,"value":"(.*?)"}/, '');
@@ -167,15 +133,6 @@ const Builder = _ => {
 		setModifying(null);
 	}
 
-	// Deletes the field
-	const deleteFieldHandler = id => {
-		const newFields = fields.filter(field => {
-			return field.id !== id;
-		});
-
-		setFields(newFields);
-	}
-
 	const onDragEnd = result => {
 		if (!result.destination) {
 			return;
@@ -190,26 +147,15 @@ const Builder = _ => {
 	return (
 		<BuilderContext.Provider
 			value={{
-				// fields: fields,
 				modalFields: modalFields,
-				// showFieldTypes: showFieldTypes,
-				// modifying: modifying,
-				// setModalOpen: setModalOpen,
-				// setShowFieldTypes: setShowFieldTypes,
 				beautifyFieldHandler: beautifyFieldHandler,
-				// deleteFieldHandler: deleteFieldHandler,
-				// addNewFieldHandler: addNewFieldHandler,
                 saveProperties: saveProperties,
-				
                 setSectionData: setSectionData,
 			}}
 		>
 			<div className={styles.Builder}>
 				<DragDropContext onDragEnd={onDragEnd}>
 					<Paper>
-						{/* <Fields /> */}
-						{/* <AddNewField /> */}
-
                         {parsedSections ? parsedSections : null}
                         <AddNew clicked={newContainerHandler} />
 					</Paper>
