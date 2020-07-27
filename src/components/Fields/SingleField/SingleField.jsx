@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
 import styles from './SingleField.module.css';
 
 import builderContext from '../../../containers/Builder/context/builder-context';
@@ -10,7 +11,7 @@ import Text from '../AllFields/Text/Text';
 import Image from '../AllFields/Image/Image';
 import List from '../AllFields/List/List';
 
-const SingleField = ({ id, data, type, customStyles }) => {
+const SingleField = ({ id, data, type, customStyles, index }) => {
 	const [editing, setEditing] = useState(true);
 	const [snapshotData, setSnapshotData] = useState(null);
 	const BuilderContext = useContext(builderContext);
@@ -78,27 +79,34 @@ const SingleField = ({ id, data, type, customStyles }) => {
 	};
 
 	return (
-		<div
-			className={[
-				styles.SingleField,
-				editing && styles.Editing,
-			].join(' ')}
-		>
-			<div
-				className={styles.Inner}
-				style={advancedStyleParser(customStyles)}
-			>
-				{allFields[type]}
-				<FieldButtons
-					id={id}
-					onEdit={editHandler}
-					onSave={saveHandler}
-					onCancel={cancelHandler}
-					onDelete={ColumnContext.deleteFieldHandler}
-					onBeautify={BuilderContext.beautifyFieldHandler}
-					editing={editing} />
-			</div>
-		</div>
+		<Draggable draggableId={id} index={index} type="field">
+			{(provided, snapshot) => (
+				<div
+					className={[
+						styles.SingleField,
+						editing && styles.Editing,
+					].join(' ')}
+					{...provided.draggableProps}
+					{...provided.dragHandleProps}
+					ref={provided.innerRef}
+				>
+					<div
+						className={styles.Inner}
+						style={advancedStyleParser(customStyles)}
+					>
+						{allFields[type]}
+						<FieldButtons
+							id={id}
+							onEdit={editHandler}
+							onSave={saveHandler}
+							onCancel={cancelHandler}
+							onDelete={ColumnContext.deleteFieldHandler}
+							onBeautify={BuilderContext.beautifyFieldHandler}
+							editing={editing} />
+					</div>
+				</div>
+			)}
+		</Draggable>
 	);
 }
  

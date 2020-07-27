@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import { FiPlus, FiColumns } from 'react-icons/fi';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
+
+import styles from './Section.module.css';
 
 import builderContext from '../../containers/Builder/context/builder-context';
 import SectionContext from './section-context';
@@ -8,7 +11,7 @@ import SectionContext from './section-context';
 import Button from '../../ui/Button/Button';
 import Column from '../Column/Column';
 
-const Section = ({ id, columns }) => {
+const Section = ({ id, columns, index }) => {
 	const [data, setData] = useState([]);
 	const [prevData, setPrevData] = useState([]);
 	const [cols, setCols] = useState();
@@ -29,18 +32,21 @@ const Section = ({ id, columns }) => {
 
 	useEffect(_ => {
         if (isMounted.current) {
-			const newCols = data.map(column => (
-				<Column key={column.id} {...column} />
+			const newCols = [];
+			data.forEach((column, i) => (
+				newCols.push(<Column key={column.id} {...column} index={i} />)
 			))
 
 			setCols(newCols);
         } else {
             isMounted.current = true;
         }
-	}, [id, data, context]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [data]);
 
 	useEffect(() => {
 		context.setSectionData(id, data);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [prevData]);
 
 	const newColumnHandler = _ => {
@@ -72,20 +78,42 @@ const Section = ({ id, columns }) => {
 	}
 
 	return (
-			<Container style={{backgroundColor: '#ccc8'}}>
-				<Row style={{backgroundColor: '#ccc8'}}>
-					<SectionContext.Provider
-						value={{ updateColumnData: updateColumnData }} >
-						{cols ? cols : null}
-					</SectionContext.Provider>
-				</Row>
-				<Button
-					type='Add'
-					clicked={newColumnHandler}
+		<Draggable draggableId={id} index={index}>
+			{(provided, snapshot) => (
+				<Container
+					className={styles.Section}
+					{...provided.draggableProps}
+					{...provided.dragHandleProps}
+					ref={provided.innerRef}
 				>
-					<FiPlus /><FiColumns />
-				</Button>
-			</Container>
+					<Droppable
+						droppableId={id}
+						isDropDisabled={context.dragging !== 'section'}
+						direction="horizontal"
+						type="section"
+					>
+						{(provided, snapshot) => (
+							<Row
+								ref={provided.innerRef}
+								{...provided.droppableProps}
+							>
+								<SectionContext.Provider
+									value={{ updateColumnData: updateColumnData }} >
+									{cols ? cols : null}
+								</SectionContext.Provider>
+								{provided.placeholder}
+							</Row>
+						)}
+					</Droppable>
+					<Button
+						type='Add'
+						clicked={newColumnHandler}
+					>
+						<FiPlus /><FiColumns />
+					</Button>
+				</Container>
+			)}
+		</Draggable>
 	);
 }
  

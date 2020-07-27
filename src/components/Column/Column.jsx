@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Col } from 'react-bootstrap';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
+import styles from './Column.module.css';
 
+import BuilderContext from '../../containers/Builder/context/builder-context';
 import SectionContext from '../Section/section-context';
 import ColumnContext from './column-context';
 import * as fieldStyles from '../../components/Fields/styles/fieldStyles';
@@ -8,11 +11,12 @@ import * as fieldStyles from '../../components/Fields/styles/fieldStyles';
 import SingleField from '../../components/Fields/SingleField/SingleField';
 import AddNewField from '../../components/AddNewField/AddNewField';
 
-const Column = ({ id, fields }) => {
+const Column = ({ id, fields, index }) => {
 	const [showFieldTypes, setShowFieldTypes] = useState(false);
 	const [data, setData] = useState();
 	const [parsedFields, setParsedFields] = useState();
 	const isMounted = useRef(false);
+	const builderContext = useContext(BuilderContext);
 	const context = useContext(SectionContext);
 	
 	useEffect(_ => {
@@ -29,10 +33,11 @@ const Column = ({ id, fields }) => {
 
 	useEffect(_ => {
 		if(isMounted.current) {
-			const parsed = data.length > 0 ? data.map(field => (
+			const parsed = data.length > 0 ? data.map((field, index) => (
 				<SingleField
 					key={field.id}
 					{...field}
+					index={index}
 				/>
 			)) : null;
 
@@ -89,10 +94,34 @@ const Column = ({ id, fields }) => {
 				deleteFieldHandler: deleteFieldHandler,
 			}}
 		>
-			<Col style={{backgroundColor: '#ccc8'}}>
-				{parsedFields ? parsedFields : null}
-				<AddNewField />
-			</Col>
+			<Draggable draggableId={id} index={index}>
+				{(provided, snapshot) => (
+					<Col
+						className={styles.Column}
+						{...provided.draggableProps}
+						{...provided.dragHandleProps}
+						ref={provided.innerRef}
+					>
+						<Droppable
+							droppableId={id}
+							index={index}
+							isDropDisabled={builderContext.dragging !== 'column'}
+							type="column"
+						>
+							{(provided, snapshot) => (
+								<div
+									ref={provided.innerRef}
+									{...provided.droppableProps}
+								>
+									{parsedFields ? parsedFields : null}
+									{provided.placeholder}
+								</div>
+							)}
+						</Droppable>
+						<AddNewField />
+					</Col>
+				)}
+			</Draggable>
 		</ColumnContext.Provider>
 	);
 }

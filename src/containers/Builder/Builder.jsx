@@ -6,6 +6,7 @@ import { DragDropContext} from 'react-beautiful-dnd';
 
 import AddNew from '../../components/AddNew/AddNew';
 import Section from '../../components/Section/Section';
+import * as SectionUtils from '../../components/Section/helper-functions';
 
 import Paper from '../Paper/Paper';
 import UpdatedFields from '../../components/Fields/UpdatedFields/UpdatedFields';
@@ -13,7 +14,7 @@ import Modal from '../../ui/Modal/Modal';
 import ModalContent from '../../components/ModalContent/ModalContent';
 
 const Builder = _ => {
-	const [fields, setFields] = useState([]);
+	const [dragging, setDragging] = useState();
 	const [modifying, setModifying] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [modalFields, setModalFields] = useState([]);
@@ -24,8 +25,8 @@ const Builder = _ => {
 
 	useEffect(() => {
 		const newParsedSections = [];
-		sections.forEach(section => {
-			newParsedSections.push(<Section key={section.id} {...section} />)
+		sections.forEach((section, i) => {
+			newParsedSections.push(<Section key={section.id} {...section} index={i} />)
 		})
 
 		setParsedSections(newParsedSections);
@@ -133,29 +134,48 @@ const Builder = _ => {
 		setModifying(null);
 	}
 
+	const onDragStart = result => {
+		setDragging(result.type);
+	}
+
 	const onDragEnd = result => {
 		if (!result.destination) {
 			return;
 		}
 
-		const newFields = [...fields];
-		const [removed] = newFields.splice(result.source.index, 1);
-		newFields.splice(result.destination.index, 0, removed);
-		setFields(newFields);
+		let newSections;
+		const type = result.type;
+		const src = result.source;
+		const dest = result.destination;
+		const id = result.draggableId;
+
+		if (type === 'paper') {
+			newSections = SectionUtils.reorderSections([...sections], src, dest, id);
+		} else if (type === 'section') {
+			newSections = SectionUtils.reorderColumns([...sections], src, dest, id);
+		} else if (type === 'column') {
+			newSections = SectionUtils.reorderFields([...sections], src, dest, id);
+		}
+		
+		setSections(newSections);
 	}
 
 	return (
 		<BuilderContext.Provider
 			value={{
 				modalFields: modalFields,
+				dragging: dragging,
 				beautifyFieldHandler: beautifyFieldHandler,
                 saveProperties: saveProperties,
                 setSectionData: setSectionData,
 			}}
 		>
 			<div className={styles.Builder}>
-				<DragDropContext onDragEnd={onDragEnd}>
-					<Paper>
+				<DragDropContext
+					onDragStart={onDragStart}
+					onDragEnd={onDragEnd}
+				>
+					<Paper dragging={dragging}>
                         {parsedSections ? parsedSections : null}
                         <AddNew clicked={newContainerHandler} />
 					</Paper>
