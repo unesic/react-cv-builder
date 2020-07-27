@@ -10,9 +10,10 @@ import FieldButtons from '../FieldButtons/FieldButtons';
 import Text from '../AllFields/Text/Text';
 import Image from '../AllFields/Image/Image';
 import List from '../AllFields/List/List';
+import Column from '../../Column/Column';
 
 const SingleField = ({ id, data, type, customStyles, index }) => {
-	const [editing, setEditing] = useState(true);
+	const [editing, setEditing] = useState(false);
 	const [snapshotData, setSnapshotData] = useState(null);
 	const BuilderContext = useContext(builderContext);
 	const ColumnContext = useContext(columnContext);
@@ -100,6 +101,7 @@ const SingleField = ({ id, data, type, customStyles, index }) => {
 							onEdit={editHandler}
 							onSave={saveHandler}
 							onCancel={cancelHandler}
+							onDuplicate={ColumnContext.duplicateFieldHandler}
 							onDelete={ColumnContext.deleteFieldHandler}
 							onBeautify={BuilderContext.beautifyFieldHandler}
 							editing={editing} />

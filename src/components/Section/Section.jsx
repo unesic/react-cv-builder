@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import { FiPlus, FiColumns } from 'react-icons/fi';
+import { FiPlus, FiColumns, FiTrash, FiCopy } from 'react-icons/fi';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import styles from './Section.module.css';
 
+import * as SectionUtils from './helper-functions';
 import builderContext from '../../containers/Builder/context/builder-context';
 import SectionContext from './section-context';
 
@@ -13,7 +14,6 @@ import Column from '../Column/Column';
 
 const Section = ({ id, columns, index }) => {
 	const [data, setData] = useState([]);
-	const [prevData, setPrevData] = useState([]);
 	const [cols, setCols] = useState();
 	const isMounted = useRef(false);
 	const context = useContext(builderContext);
@@ -31,50 +31,57 @@ const Section = ({ id, columns, index }) => {
 	}, [JSON.stringify(columns)]);
 
 	useEffect(_ => {
-        if (isMounted.current) {
+		if (isMounted.current) {
 			const newCols = [];
 			data.forEach((column, i) => (
 				newCols.push(<Column key={column.id} {...column} index={i} />)
 			))
 
 			setCols(newCols);
-        } else {
-            isMounted.current = true;
-        }
+		} else {
+			isMounted.current = true;
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data]);
 
-	useEffect(() => {
-		context.setSectionData(id, data);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [prevData]);
-
 	const newColumnHandler = _ => {
-        const newData = data ? data.map(f => ({...f})) : [];
+		const newData = data ? data.map(f => ({...f})) : [];
 
-        newData.push({
+		newData.push({
 			id: 'column-id-' + new Date().valueOf(),
 			fields: [],
-        })
+		})
 
-        setData(newData);
+		setData(newData);
 		context.setSectionData(id, newData);
 	}
 
-	const updateColumnData = (id, updatedData) => {
-		if (updatedData.length > 0) {
+	const updateColumnData = (columnId, updatedData) => {
+		if (updatedData.length) {
 			const newData = data.map(c => ({...c}));
-			const current = newData.find(column => column.id === id);
-			const old = data.find(column => column.id === id);
+			const current = newData.find(column => column.id === columnId);
+			const old = data.find(column => column.id === columnId);
 			const index = newData.indexOf(current);
 			current.fields = [...updatedData]
 			
 			if ({...current}.fields !== {...old}.fields) {
 				newData[index] = current;
 				setData(newData);
-				setPrevData(newData);
+				context.setSectionData(id, newData);
 			}
 		}
+	}
+
+	const duplicateColumnHandler = columnId => {
+		const newData = SectionUtils.duplicateColumn(context.sections, columnId);
+		setData(newData);
+		context.setSectionData(id, newData);
+	}
+
+	const deleteColumnHandler = columnId => {
+		const newData = [...data].filter(column => column.id !== columnId);
+		setData(newData);
+		context.setSectionData(id, newData);
 	}
 
 	return (
@@ -98,7 +105,12 @@ const Section = ({ id, columns, index }) => {
 								{...provided.droppableProps}
 							>
 								<SectionContext.Provider
-									value={{ updateColumnData: updateColumnData }} >
+									value={{
+										updateColumnData: updateColumnData,
+										deleteColumnHandler: deleteColumnHandler,
+										duplicateColumnHandler: duplicateColumnHandler,
+									}}
+								>
 									{cols ? cols : null}
 								</SectionContext.Provider>
 								{provided.placeholder}
@@ -110,6 +122,18 @@ const Section = ({ id, columns, index }) => {
 						clicked={newColumnHandler}
 					>
 						<FiPlus /><FiColumns />
+					</Button>
+					<Button
+						type='Delete'
+						clicked={_ => context.deleteSectionHandler(id)}
+					>
+						<FiTrash />
+					</Button>
+					<Button
+						type='Add'
+						clicked={_ => context.duplicateSectionHandler(id)}
+					>
+						<FiCopy/>
 					</Button>
 				</Container>
 			)}

@@ -18,7 +18,7 @@ const Builder = _ => {
 	const [modifying, setModifying] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [modalFields, setModalFields] = useState([]);
-    const [modalProperties, setModalProperties] = useState({});
+	const [modalProperties, setModalProperties] = useState({});
 	const [activeField, setActiveField] = useState();
 	const [sections, setSections] = useState([]);
 	const [parsedSections, setParsedSections] = useState([]);
@@ -66,32 +66,31 @@ const Builder = _ => {
 	}, [modalProperties]);
 
 	// Handles adding new sections
-    const newContainerHandler = _ => {
-        const newSections = [
-            ...sections,
-            {
-                id: 'section-id-' + new Date().valueOf(),
-                columns: [],
-                setSectionData: setSectionData
-            }
-        ];
-        
-        setSections(newSections);
-    }
+	const newContainerHandler = _ => {
+		const newSections = [
+			...sections,
+			{
+				id: 'section-id-' + new Date().valueOf(),
+				columns: [],
+			}
+		];
+		
+		setSections(newSections);
+	}
 
 	// Handles all the updates on section as well its children elements
-    const setSectionData = (id, newData) => {
-		const newSections = sections.map(section => ({...section}));
+	const setSectionData = (id, newData) => {
+		const newSections = [...sections];
 		const current = newSections.find(section => section.id === id);
-		const old = sections.find(section => section.id === id);
+		const old = newSections.find(section => section.id === id);
 		const index = newSections.indexOf(current);
 		current.columns = [...newData];
-		newSections[index] = current;
+		newSections[index] = {...current};
 
 		if (old.columns !== current.columns) {
 			setSections(newSections);
 		}
-    }
+	}
 
 	// Sets a field that's being edited currently and opens a modal
 	const beautifyFieldHandler = id => {
@@ -134,6 +133,19 @@ const Builder = _ => {
 		setModifying(null);
 	}
 
+	const duplicateSectionHandler = sectionId => {
+		const newSections = [...sections];
+		const {section, index} = SectionUtils.duplicateSection(sections, sectionId);
+		newSections.splice(index, 0, section)
+		
+		setSections([...newSections]);
+	}
+
+	const deleteSectionHandler = sectionId => {
+		const newSections = [...sections].filter(section => section.id !== sectionId);
+		setSections(newSections);
+	}
+
 	const onDragStart = result => {
 		setDragging(result.type);
 	}
@@ -163,11 +175,14 @@ const Builder = _ => {
 	return (
 		<BuilderContext.Provider
 			value={{
+				sections: sections,
 				modalFields: modalFields,
 				dragging: dragging,
 				beautifyFieldHandler: beautifyFieldHandler,
-                saveProperties: saveProperties,
-                setSectionData: setSectionData,
+				saveProperties: saveProperties,
+				setSectionData: setSectionData,
+				deleteSectionHandler: deleteSectionHandler,
+				duplicateSectionHandler: duplicateSectionHandler,
 			}}
 		>
 			<div className={styles.Builder}>
@@ -176,8 +191,8 @@ const Builder = _ => {
 					onDragEnd={onDragEnd}
 				>
 					<Paper dragging={dragging}>
-                        {parsedSections ? parsedSections : null}
-                        <AddNew clicked={newContainerHandler} />
+						{parsedSections ? parsedSections : null}
+						<AddNew clicked={newContainerHandler} />
 					</Paper>
 				</DragDropContext>
 

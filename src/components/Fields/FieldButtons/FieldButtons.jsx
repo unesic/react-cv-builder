@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './FieldButtons.module.css';
 
-import { FiEdit, FiDroplet, FiTrash, FiSave, FiX  } from 'react-icons/fi';
+import { FiEdit, FiDroplet, FiTrash, FiSave, FiX, FiCopy } from 'react-icons/fi';
 
 import Button from '../../../ui/Button/Button';
 
-const FieldButtons = ({ id, onEdit, onSave, onCancel, onDelete, onBeautify, editing }) => {
+const FieldButtons = ({ id, onEdit, onSave, onCancel, onDuplicate, onDelete, onBeautify, editing }) => {
 	const buttons = (
 		<React.Fragment>
 			<Button
@@ -48,6 +48,11 @@ const FieldButtons = ({ id, onEdit, onSave, onCancel, onDelete, onBeautify, edit
 					customStyles={editing ? styles.Editing : ''}
 					clicked={_ => onBeautify(id)}>
 						<FiDroplet />
+					</Button>
+				<Button
+					type='Add'
+					clicked={_ => onDuplicate(id)}>
+						<FiCopy />
 					</Button>
 				{editing ? editingButtons : buttons}
 			</React.Fragment>

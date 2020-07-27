@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Col } from 'react-bootstrap';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { FiTrash, FiCopy } from 'react-icons/fi';
 import styles from './Column.module.css';
 
 import BuilderContext from '../../containers/Builder/context/builder-context';
 import SectionContext from '../Section/section-context';
 import ColumnContext from './column-context';
+import * as SectionUtils from '../Section/helper-functions';
 import * as fieldStyles from '../../components/Fields/styles/fieldStyles';
 
 import SingleField from '../../components/Fields/SingleField/SingleField';
 import AddNewField from '../../components/AddNewField/AddNewField';
+import Button from '../../ui/Button/Button';
 
 const Column = ({ id, fields, index }) => {
 	const [showFieldTypes, setShowFieldTypes] = useState(false);
@@ -68,6 +71,12 @@ const Column = ({ id, fields, index }) => {
 		setShowFieldTypes(false);
 	}
 
+	const duplicateFieldHandler = fieldId => {
+		const newData = SectionUtils.duplicateField(builderContext.sections, fieldId);
+		setData(newData);
+		context.updateColumnData(id, newData);
+	}
+
 	const deleteFieldHandler = fieldId => {
 		const newData = [...data].filter(field => field.id !== fieldId);
 		setData(newData);
@@ -91,6 +100,7 @@ const Column = ({ id, fields, index }) => {
 				setShowFieldTypes: setShowFieldTypes,
 				newFieldHandler: newFieldHandler,
 				setFieldData: setFieldData,
+				duplicateFieldHandler: duplicateFieldHandler,
 				deleteFieldHandler: deleteFieldHandler,
 			}}
 		>
@@ -119,6 +129,18 @@ const Column = ({ id, fields, index }) => {
 							)}
 						</Droppable>
 						<AddNewField />
+						<Button
+							type='Delete'
+							clicked={_ => context.deleteColumnHandler(id)}
+						>
+							<FiTrash/>
+						</Button>
+						<Button
+							type='Add'
+							clicked={_ => context.duplicateColumnHandler(id)}
+						>
+							<FiCopy/>
+						</Button>
 					</Col>
 				)}
 			</Draggable>
