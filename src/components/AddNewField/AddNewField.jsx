@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { FiPlus, FiMinus} from 'react-icons/fi';
+import { FiPlus, FiMinus, FiFile } from 'react-icons/fi';
 
 import styles from './AddNewField.module.css'
 import ColumnContext from '../../components/Column/column-context';
@@ -17,10 +17,10 @@ const AddNewField = _ => {
 			/>
 			<Button
 				Active={context.showFieldTypes}
-				type='Add'
 				clicked={_ => context.setShowFieldTypes(!context.showFieldTypes)}
 			>
 				{context.showFieldTypes ? <FiMinus /> : <FiPlus />}
+				<FiFile />
 			</Button>
 		</div>
 	);

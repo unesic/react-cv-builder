@@ -176,5 +176,7 @@ export const duplicateField = (sections, fieldId) => {
 	newField.id = 'field-id-' + new Date().valueOf();
 	column.fields.splice(fieldIndex + 1, 0, {...newField});
 
+	console.log(newField)
+
 	return [...column.fields]
 }

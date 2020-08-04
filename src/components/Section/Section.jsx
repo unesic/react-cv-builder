@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { FiPlus, FiColumns, FiTrash, FiCopy } from 'react-icons/fi';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -88,7 +88,7 @@ const Section = ({ id, columns, index }) => {
 		<Draggable draggableId={id} index={index}>
 			{(provided, snapshot) => (
 				<Container
-					className={styles.Section}
+					className={`${styles.Section} mb-2`}
 					{...provided.draggableProps}
 					{...provided.dragHandleProps}
 					ref={provided.innerRef}
@@ -117,24 +117,20 @@ const Section = ({ id, columns, index }) => {
 							</Row>
 						)}
 					</Droppable>
-					<Button
-						type='Add'
-						clicked={newColumnHandler}
-					>
-						<FiPlus /><FiColumns />
-					</Button>
-					<Button
-						type='Delete'
-						clicked={_ => context.deleteSectionHandler(id)}
-					>
-						<FiTrash />
-					</Button>
-					<Button
-						type='Add'
-						clicked={_ => context.duplicateSectionHandler(id)}
-					>
-						<FiCopy/>
-					</Button>
+					
+					<Row className={styles.ButtonsRow}>
+						<Col className="d-flex justify-content-center my-2">
+							<Button clicked={newColumnHandler}>
+								<FiPlus /><FiColumns />
+							</Button>
+							<Button clicked={_ => context.deleteSectionHandler(id)}>
+								<FiTrash />
+							</Button>
+							<Button clicked={_ => context.duplicateSectionHandler(id)}>
+								<FiCopy/>
+							</Button>
+						</Col>
+					</Row>
 				</Container>
 			)}
 		</Draggable>

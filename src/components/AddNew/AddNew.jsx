@@ -7,9 +7,9 @@ import Button from '../../ui/Button/Button';
 const AddNew = ({ clicked }) => {
 
 	return (
-		<Container>
+		<Container className="mt-3">
 			<Row>
-				<Col>
+				<Col className="d-flex justify-content-center">
 					<Button
 						type='Add'
 						clicked={clicked}

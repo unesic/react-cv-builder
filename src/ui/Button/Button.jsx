@@ -5,7 +5,7 @@ const Button = ({ TextWithIcon, FieldButton, Active, type, customStyles, clicked
 	const classes = [
 		styles.Button,
 		Active ? styles.Active : '',
-		styles[type],
+		type ? styles[type] : styles['Default'],
 		customStyles,
 		TextWithIcon ? styles.TextWithIcon : '',
 		FieldButton ? styles.FieldButton : '',

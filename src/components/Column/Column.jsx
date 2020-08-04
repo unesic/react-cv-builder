@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Col } from 'react-bootstrap';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { FiTrash, FiCopy } from 'react-icons/fi';
+
 import styles from './Column.module.css';
 
 import BuilderContext from '../../containers/Builder/context/builder-context';
@@ -83,14 +84,15 @@ const Column = ({ id, fields, index }) => {
 		context.updateColumnData(id, newData);
 	}
 
-	const setFieldData = (id, updatedData) => {
+	const setFieldData = (fieldId, updatedData) => {
 		const newData = [...data];
-		const current = newData.find(field => field.id === id);
+		const current = newData.find(field => field.id === fieldId);
 		const index = newData.indexOf(current);
 		current.data = updatedData;
 		newData[index] = current;
 
-		setData([...newData]);
+		setData(newData);
+		context.updateColumnData(id, newData);
 	}
 
 	return (
@@ -107,40 +109,39 @@ const Column = ({ id, fields, index }) => {
 			<Draggable draggableId={id} index={index}>
 				{(provided, snapshot) => (
 					<Col
-						className={styles.Column}
+						className='my-2'
 						{...provided.draggableProps}
 						{...provided.dragHandleProps}
 						ref={provided.innerRef}
 					>
-						<Droppable
-							droppableId={id}
-							index={index}
-							isDropDisabled={builderContext.dragging !== 'column'}
-							type="column"
-						>
-							{(provided, snapshot) => (
-								<div
-									ref={provided.innerRef}
-									{...provided.droppableProps}
-								>
-									{parsedFields ? parsedFields : null}
-									{provided.placeholder}
-								</div>
-							)}
-						</Droppable>
-						<AddNewField />
-						<Button
-							type='Delete'
-							clicked={_ => context.deleteColumnHandler(id)}
-						>
-							<FiTrash/>
-						</Button>
-						<Button
-							type='Add'
-							clicked={_ => context.duplicateColumnHandler(id)}
-						>
-							<FiCopy/>
-						</Button>
+						<div className={styles.Column}>
+							<Droppable
+								droppableId={id}
+								index={index}
+								isDropDisabled={builderContext.dragging !== 'column'}
+								type="column"
+							>
+								{(provided, snapshot) => (
+									<div
+										ref={provided.innerRef}
+										{...provided.droppableProps}
+									>
+										{parsedFields ? parsedFields : null}
+										{provided.placeholder}
+									</div>
+								)}
+							</Droppable>
+
+							<div className={`${styles.Buttons} d-flex justify-content-center py-2`}>
+								<AddNewField />
+								<Button clicked={_ => context.deleteColumnHandler(id)}>
+									<FiTrash/>
+								</Button>
+								<Button clicked={_ => context.duplicateColumnHandler(id)}>
+									<FiCopy/>
+								</Button>
+							</div>
+						</div>
 					</Col>
 				)}
 			</Draggable>

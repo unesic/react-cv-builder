@@ -1,5 +1,8 @@
 .Column {
-	border-left: 1px solid black;
-	border-right: 1px solid black;
-	background-color: #c558;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+}
+
+.Buttons {
+	background-color: rgba(0, 0, 0, 0.1)
 }

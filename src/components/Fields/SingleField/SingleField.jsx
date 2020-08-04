@@ -10,7 +10,6 @@ import FieldButtons from '../FieldButtons/FieldButtons';
 import Text from '../AllFields/Text/Text';
 import Image from '../AllFields/Image/Image';
 import List from '../AllFields/List/List';
-import Column from '../../Column/Column';
 
 const SingleField = ({ id, data, type, customStyles, index }) => {
 	const [editing, setEditing] = useState(false);
@@ -19,7 +18,7 @@ const SingleField = ({ id, data, type, customStyles, index }) => {
 	const ColumnContext = useContext(columnContext);
 
 	useEffect(_ => {
-			setSnapshotData(data);
+		setSnapshotData(data);
 	}, [data, setSnapshotData]);
 
 	const editHandler = _ => {
@@ -30,6 +29,7 @@ const SingleField = ({ id, data, type, customStyles, index }) => {
 	const saveHandler = _ => {
 		setEditing(false);
 		setSnapshotData(null);
+		ColumnContext.setFieldData(id, data);
 	}
 
 	const cancelHandler = _ => {

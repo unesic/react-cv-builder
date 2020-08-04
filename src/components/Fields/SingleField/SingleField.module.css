@@ -1,8 +1,6 @@
 .SingleField {
-    position: relative;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    padding: 15px;
+	position: relative;
+	border: 10px solid transparent;
     width: 100%;
     height: fit-content;
 }
@@ -16,8 +14,7 @@
     border-radius: 5px;
     width: 100%;
     height: 100%;
-    background-color: var(--color-save);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.1);
     opacity: 0;
     transition: all 0.2s ease 0s;
 }
@@ -27,11 +24,12 @@
 }
 
 .SingleField [class*=FieldButtons] {
-    opacity: 0.3;
+    opacity: 0;
     filter: grayscale(1);
 }
 
-.SingleField:hover [class*=FieldButtons] {
+.SingleField:hover [class*=FieldButtons],
+.SingleField [class*=FieldButtons_Editing] {
     opacity: 1;
     filter: grayscale(0);
 }
