@@ -1,7 +1,6 @@
 import React from 'react';
-import styles from './FieldTypes.module.css';
-
 import { FiType, FiImage, FiList } from 'react-icons/fi';
+import styles from './FieldTypes.module.css';
 
 import Button from '../../ui/Button/Button';
 

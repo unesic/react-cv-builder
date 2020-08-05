@@ -30,9 +30,9 @@
 .Text,
 .TextArea {
     outline: unset;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-save);
     border-radius: 5px;
-    padding: 8px 10px;
+    padding: 23px 10px 8px;
     width: 100%;
     background-color: transparent;
     font-family: inherit;
@@ -42,10 +42,4 @@
 
 .TextArea {
     min-height: 4rem;
-}
-
-.Text:focus,
-.TextArea:focus {
-    border-color: transparent;
-    box-shadow: 0 0 3px 0 var(--color-save);
 }

@@ -1,8 +1,4 @@
 .AddNewField {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: fit-content;
-    margin-top: 50px;
-    text-align: center;
+	position: relative;
+	display: inline-block;
 }

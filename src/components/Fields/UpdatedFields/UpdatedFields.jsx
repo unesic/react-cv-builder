@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './UpdatedFields.module.css';
-
 import Tabs from './Tabs/Tabs';
 
 const UpdatedFields = ({ fields, properties, propertyChangeHandler }) => {
