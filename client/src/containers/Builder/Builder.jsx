@@ -13,7 +13,7 @@ import UpdatedFields from '../../components/Fields/UpdatedFields/UpdatedFields';
 import Modal from '../../ui/Modal/Modal';
 import ModalContent from '../../components/ModalContent/ModalContent';
 
-const Builder = _ => {
+const Builder = ({ page }) => {
 	const [dragging, setDragging] = useState();
 	const [modifying, setModifying] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -22,6 +22,14 @@ const Builder = _ => {
 	const [activeField, setActiveField] = useState();
 	const [sections, setSections] = useState([]);
 	const [parsedSections, setParsedSections] = useState([]);
+
+	useEffect(() => {
+		if (page) {
+			const data = page[0].data.replace(/'/g, '"');
+			const parsed = JSON.parse(data);
+			setSections(parsed);
+		}
+	}, [page]);
 
 	useEffect(() => {
 		const newParsedSections = [];
