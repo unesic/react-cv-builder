@@ -23,7 +23,6 @@ function reducer(state, action) {
 	}
 }
 
-
 const CVBuilder = _ => {
 	const [state, dispatch] = useReducer(reducer, {
 		page: null,
