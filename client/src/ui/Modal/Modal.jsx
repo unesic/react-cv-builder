@@ -8,14 +8,17 @@ import Backdrop from './Backdrop/Backdrop';
 const Modal = ({ isVisible, backdropClicked, children }) => {
 	return (
 		<React.Fragment>
-			<div className={[
-				styles.Modal,
-				isVisible ? styles.Show : styles.Hide
-			].join(' ')}>
+			<div className={
+				[
+					styles.Modal,
+					isVisible ? styles.Show : styles.Hide
+				].join(' ')}
+			>
 				{children}
 			</div>
-			<div
-				className={[
+
+			<div className={
+				[
 					isVisible ? styles.Show : styles.Hide,
 					styles.ModalClose
 				].join(' ')}
@@ -23,6 +26,7 @@ const Modal = ({ isVisible, backdropClicked, children }) => {
 			>
 				<FiX />
 			</div>
+			
 			<Backdrop
 				show={isVisible}
 				clicked={backdropClicked} />

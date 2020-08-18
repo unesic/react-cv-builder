@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getPages, addPage, deletePage } = require('../controllers/pages');
+const { getPages, createPage, savePage, deletePage } = require('../controllers/pages');
+const auth = require('../middleware/auth');
 
-router
-	.route('/')
-	.get(getPages)
-	.post(addPage);
+router.get('/', auth, getPages)
 
-router
-	.route('/:id')
-	.delete(deletePage);
+router.route('/create').post(createPage);
+router.route('/save').post(savePage);
+router.route('/:id').delete(deletePage);
 
 module.exports = router;

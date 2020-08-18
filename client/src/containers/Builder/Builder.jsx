@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import styles from './Builder.module.css';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { Spinner } from 'react-bootstrap';
 
+import styles from './Builder.module.css';
 import BuilderContext from './context/builder-context';
-import { DragDropContext} from 'react-beautiful-dnd';
 
 import AddNew from '../../components/AddNew/AddNew';
 import Section from '../../components/Section/Section';
@@ -13,7 +14,7 @@ import UpdatedFields from '../../components/Fields/UpdatedFields/UpdatedFields';
 import Modal from '../../ui/Modal/Modal';
 import ModalContent from '../../components/ModalContent/ModalContent';
 
-const Builder = ({ page }) => {
+const Builder = ({ page, error, loading }) => {
 	const [dragging, setDragging] = useState();
 	const [modifying, setModifying] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -22,6 +23,8 @@ const Builder = ({ page }) => {
 	const [activeField, setActiveField] = useState();
 	const [sections, setSections] = useState([]);
 	const [parsedSections, setParsedSections] = useState([]);
+
+	const spinner = <div style={{textAlign: 'center'}}><Spinner animation="border" /></div>
 
 	useEffect(() => {
 		if (page) {
@@ -199,7 +202,7 @@ const Builder = ({ page }) => {
 					onDragEnd={onDragEnd}
 				>
 					<Paper dragging={dragging}>
-						{parsedSections ? parsedSections : null}
+						{loading ? spinner : parsedSections ? parsedSections : null}
 						<AddNew clicked={newContainerHandler} />
 					</Paper>
 				</DragDropContext>

@@ -1,49 +1,62 @@
-import React, { useReducer, useState } from 'react';
-import axios from 'axios';
+import React, { useState, useContext, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 
-function reducer(state, action) {
-	switch(action.type) {
-		case 'USER_LOGIN':
-			return {
-				loading: false,
-				data: action.payload
-			}
-		case 'ERROR':
-			return {
-				error: action.payload
-			}
-		default:
-			return state;
-	}
-}
+import { AppContext } from '../../App';
 
-const Signin = _ => {
-	const [state, dispatch] = useReducer(reducer, { user: null, error: null, loading: true })
-	const [user, setUser] = useState({ username: '', password: '' })
+const Signin = (props) => {
+	const [user, setUser] = useState({ email: '', password: '' });
+	const [loading, setLoading] = useState(false);
+	const context = useContext(AppContext);
+
+	const spinner = <div style={{textAlign: 'center'}}><Spinner animation="border" /></div>;
+	const btn = (
+		<Button
+			variant="primary"
+			type="submit">Sign In</Button>
+	) 
+	const btnLoading = (
+		<Button
+			variant="primary"
+			type="submit"
+		>
+			<Spinner
+				as="span"
+				animation="border"
+				size="sm"
+				role="status"
+				aria-hidden="true" /> Loading...
+		</Button>
+	)
+
+	useEffect(() => {
+		if (!context.state.loading && context.state.data) {
+			props.history.push('/');
+		}
+
+		setLoading(false)
+		//eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const loginUser = async e => {
 		e.preventDefault();
+		setLoading(true);
 
-		try {
-			const res = await axios.get('/api/v1/user');
-	
-			dispatch({
-				type: 'USER_LOGIN',
-				payload: res.data.data
-			})
-		} catch (err) {
-			dispatch({
-				type: 'ERROR',
-				payload: err.response.data.error
-			})
+		const res = await context.Auth.login(user);
+		
+		if (res.type !== 'ERROR') {
+			localStorage.setItem('jwt_token', res.payload.token);
+			context.dispatch(res);
+			props.history.push('/');
+		} else {
+			setLoading(false);
 		}
 	}
 
-	const handleUsername = e => {
+	const handleEmail = e => {
 		setUser({
 			...user,
-			username: e.target.value
+			email: e.target.value
 		})
 	}
 
@@ -58,26 +71,27 @@ const Signin = _ => {
 		<Container className="my-5">
 			<Row>
 				<Col>
-					<Card>
-						<Card.Body>
-							<Form className="p-2" onSubmit={loginUser}>
-								<Form.Group controlId="signup_username">
-									<Form.Label>Username</Form.Label>
-									<Form.Control type="text" placeholder="Enter username" value={user.username} onChange={handleUsername} />
-								</Form.Group>
+					{context.state.loading ? spinner : (
+						<Card>
+							<Card.Body>
+								<Form className="p-2" onSubmit={loginUser}>
+									<Form.Group controlId="signup_username">
+										<Form.Label>Email</Form.Label>
+										<Form.Control type="email" placeholder="Enter email" value={user.email} onChange={handleEmail} />
+									</Form.Group>
 
-								<Form.Group controlId="signup_password">
-									<Form.Label>Password</Form.Label>
-									<Form.Control type="password" placeholder="Password" value={user.password} onChange={handlePassword} />
-								</Form.Group>
-								
-								<Button variant="primary" type="submit">Sign In</Button>
-							</Form>
-						</Card.Body>
-					</Card>
+									<Form.Group controlId="signup_password">
+										<Form.Label>Password</Form.Label>
+										<Form.Control type="password" placeholder="Password" value={user.password} onChange={handlePassword} />
+									</Form.Group>
+									
+									{loading ? btnLoading : btn}
+								</Form>
+							</Card.Body>
+						</Card>
+					)}
 				</Col>
 			</Row>
-			<pre>{JSON.stringify(state)}</pre>
 		</Container>
 	);
 }

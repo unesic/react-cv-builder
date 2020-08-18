@@ -1,8 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const User = require('../models/User');
-const auth = require('../middleware/auth');
 
 /**
  * @desc	Auth user
@@ -36,6 +34,10 @@ exports.authUser = async (req, res, next) => {
 			{ expiresIn: 3600 }
 		)
 
+		res.cookie('jwt_token', token, { httpOnly: true });
+
+		user.password = undefined;
+
 		return res.status(201).json({
 			success: true,
 			data: user,
@@ -60,7 +62,7 @@ exports.getUserData = async (req, res, next) => {
 
 		return res.status(201).json({
 			success: true,
-			user: user
+			data: user
 		});
 	} catch (err) {
 		throw err;

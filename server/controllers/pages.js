@@ -1,4 +1,5 @@
 const Page = require('../models/Page');
+const User = require('../models/User');
 
 /**
  * @desc	Get all pages
@@ -7,11 +8,11 @@ const Page = require('../models/Page');
  */
 exports.getPages = async (req, res, next) => {
 	try {
-		const pages = await Page.find();
+		const pages = await Page.find({ ownerId: req.user.id });
 
 		return res.status(200).json({
 			success: true,
-			data: pages,
+			data: pages
 		});
 	} catch (err) {
 		return res.status(500).json({
@@ -22,13 +23,13 @@ exports.getPages = async (req, res, next) => {
 }
 
 /**
- * @desc	Add page
- * @route	POST /api/v1/pages
- * @access	Public
+ * @desc	Create new page
+ * @route	POST /api/v1/pages/create
+ * @access	Private
  */
-exports.addPage = async (req, res, next) => {
+exports.createPage = async (req, res, next) => {
 	try {
-		const { ownerId, title, data } = req.body;
+		const { ownerId, title, slug, data } = req.body;
 		const page = await Page.create(req.body);
 
 		return res.status(201).json({
@@ -45,6 +46,37 @@ exports.addPage = async (req, res, next) => {
 			})
 		}
 		
+		return res.status(500).json({
+			success: false,
+			error: 'Server error',
+		})
+	}
+}
+
+/**
+ * @desc	Update/save page
+ * @route	POST /api/v1/pages/save
+ * @access	Private
+ */
+exports.savePage = async (req, res, next) => {
+	try {
+		const { id, ownerId, data } = req.body;
+		const page = await Page.findById(id);
+
+		if (!ownerId || !page.ownerId === ownerId) {
+			return res.status(403).json({
+				success: false,
+				error: 'Permission denied'
+			})
+		}
+
+		page.data = data;
+
+		return res.status(201).json({
+			success: true,
+			data: page
+		})
+	} catch (err) {
 		return res.status(500).json({
 			success: false,
 			error: 'Server error',

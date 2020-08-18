@@ -10,10 +10,15 @@ const PageSchema = new mongoose.Schema({
 		trim: true,
 		required: [true, 'Please add page title.'],
 	},
+	slug: {
+		type: String,
+		trim: true,
+		required: true,
+	},
 	data: {
 		type: String,
 		trim: true,
-		required: [true, 'Please create at least one section before saving.'],
+		required: false,
 	},
 	createdAt: {
 		type: Date,
