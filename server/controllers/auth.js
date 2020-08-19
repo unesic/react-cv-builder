@@ -31,7 +31,7 @@ exports.authUser = async (req, res, next) => {
 		const token = jwt.sign(
 			{ id: user._id },
 			process.env.JWT_SECRET,
-			{ expiresIn: 3600 }
+			{ expiresIn: 3600 * 24 }
 		)
 
 		res.cookie('jwt_token', token, { httpOnly: true });

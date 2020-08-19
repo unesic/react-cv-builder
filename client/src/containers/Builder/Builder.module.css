@@ -1,7 +1,7 @@
 .Builder {
-    flex: 1 0;
-    display: flex;
+	grid-area: builder;
+    /* display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #eeeeee;
+    background-color: #eeeeee; */
 }

@@ -1,5 +1,6 @@
 .SideDrawer {
-    flex: 0 0 250px;
+	grid-area: sidedrawer;
+    width: 250px;
     padding: 20px;
     background-color: #1d3557;
 }

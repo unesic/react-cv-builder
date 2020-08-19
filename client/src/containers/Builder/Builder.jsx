@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Spinner } from 'react-bootstrap';
 
 import styles from './Builder.module.css';
-import BuilderContext from './context/builder-context';
+
+import Topbar from '../../ui/Topbar/Topbar';
 
 import AddNew from '../../components/AddNew/AddNew';
 import Section from '../../components/Section/Section';
@@ -14,7 +15,11 @@ import UpdatedFields from '../../components/Fields/UpdatedFields/UpdatedFields';
 import Modal from '../../ui/Modal/Modal';
 import ModalContent from '../../components/ModalContent/ModalContent';
 
+export const BuilderContext = createContext();
+
 const Builder = ({ page, error, loading }) => {
+	const pageInfo = {...page};
+
 	const [dragging, setDragging] = useState();
 	const [modifying, setModifying] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -27,8 +32,8 @@ const Builder = ({ page, error, loading }) => {
 	const spinner = <div style={{textAlign: 'center'}}><Spinner animation="border" /></div>
 
 	useEffect(() => {
-		if (page) {
-			const data = page[0].data.replace(/'/g, '"');
+		if (page.data) {
+			const data = page.data.replace(/'/g, '"');
 			const parsed = JSON.parse(data);
 			setSections(parsed);
 		}
@@ -186,6 +191,7 @@ const Builder = ({ page, error, loading }) => {
 	return (
 		<BuilderContext.Provider
 			value={{
+				pageInfo: pageInfo,
 				sections: sections,
 				modalFields: modalFields,
 				dragging: dragging,
@@ -196,6 +202,7 @@ const Builder = ({ page, error, loading }) => {
 				duplicateSectionHandler: duplicateSectionHandler,
 			}}
 		>
+			<Topbar />
 			<div className={styles.Builder}>
 				<DragDropContext
 					onDragStart={onDragStart}

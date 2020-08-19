@@ -20,10 +20,8 @@ const PageSchema = new mongoose.Schema({
 		trim: true,
 		required: false,
 	},
-	createdAt: {
-		type: Date,
-		default: Date.now
-	}
+}, {
+	timestamps: true
 });
 
 module.exports = mongoose.model('Page', PageSchema);

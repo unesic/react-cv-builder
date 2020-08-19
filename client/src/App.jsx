@@ -9,47 +9,58 @@ import CVBuilder from './views/CVBuilder/CVBuilder';
 import Signup from './views/Signup/Signup';
 import Signin from './views/Signin/Signin';
 import UserPages from './views/UserPages/UserPages';
+import SinglePage from './views/SinglePage/SinglePage';
 
 import Topbar from './ui/Topbar/Topbar';
 import Modal from './ui/Modal/Modal';
 
 export const AppContext = createContext();
 
-const App = _ => {
+const App = (props) => {
 	const jwt = localStorage.getItem('jwt_token');
 	const [state, dispatch] = useReducer(reducer, { data: undefined, error: null, loading: true });
 	const [modalOpen, setModalOpen] = useState(false);
 	const [modalContent, setModalContent] = useState();
 	const [newPageAdded, setNewPageAdded] = useState(false);
+	const [isAppMounted, setIsAppMounted] = useState(false);
+	const [requestedPage, setRequestedPage] = useState();
 
 	useEffect(() => {
 		getJwt();
+
+		return _ => {
+			setIsAppMounted(true);
+		}
 		//eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	async function getJwt() {
 		const res = await Auth.authenticate(jwt);
-		dispatch(res);
+
+		if (res.type !== 'AUTH_ERROR') {
+			dispatch(res);
+		}
 	}
 
 	return (
 		<AppContext.Provider value={{
-			jwt,
+			jwt, isAppMounted,
 			Page, Auth,
 			state, dispatch,
 			modalOpen, setModalOpen,
 			newPageAdded, setNewPageAdded,
-			setModalContent
+			setModalContent,
+			requestedPage, setRequestedPage
 		}}>
-			<BrowserRouter>
-				<Topbar />
-				<Switch>
-					<Route path="/signup" component={Signup} />
-					<Route path="/signin" component={withRouter(Signin)} />
-					<Route path="/pages" component={UserPages} />
-					<Route path="/" component={CVBuilder} exact />
-				</Switch>
-			</BrowserRouter>
+			{!props.location.search.includes('&edit=1') ? <Topbar /> : null}
+			<Switch>
+				<Route path="/signup" component={withRouter(Signup)} />
+				<Route path="/signin" component={withRouter(Signin)} />
+				<Route path="/pages" component={withRouter(UserPages)} />
+				<Route path="/:username/:slug" component={SinglePage} />
+				<Route path="/" component={CVBuilder} exact />
+			</Switch>
+
 			<Modal
 				isVisible={modalOpen}
 				backdropClicked={_ => setModalOpen(false)}>
@@ -59,4 +70,4 @@ const App = _ => {
 	);
 }
  
-export default App;
+export default withRouter(App);

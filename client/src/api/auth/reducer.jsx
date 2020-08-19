@@ -30,17 +30,17 @@ export default (state, action) => {
 				error: action.payload
 			}
 			
-		case 'GET_PAGE':
-			return {
-				...state,
-				loading: false,
-				page: action.payload
-			}
-		case 'PAGE_ERROR':
-			return {
-				...state,
-				error: action.payload
-			}
+		// case 'GET_PAGE':
+		// 	return {
+		// 		...state,
+		// 		loading: false,
+		// 		page: action.payload
+		// 	}
+		// case 'PAGE_ERROR':
+		// 	return {
+		// 		...state,
+		// 		error: action.payload
+		// 	}
 		default:
 			return state;
 	}

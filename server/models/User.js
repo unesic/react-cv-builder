@@ -17,11 +17,9 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		trim: false,
 		required: [true, 'Please enter password.'],
-	},
-	createdAt: {
-		type: Date,
-		default: Date.now
 	}
+}, {
+	timestamps: true
 });
 
 module.exports = mongoose.model('User', UserSchema);

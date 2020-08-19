@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 
 import { AppContext } from '../../App';
 
-const Signup = _ => {
+const Signup = (props) => {
 	const [user, setUser] = useState({ username: '', email: '', password: '' })
 	const context = useContext(AppContext);
 
@@ -12,6 +12,14 @@ const Signup = _ => {
 		const res = await context.Auth.register(user);
 		localStorage.setItem('jwt_token', res.payload.token);
 		context.dispatch(res);
+			
+		const previousLocation = props.location.state;
+
+		if (previousLocation) {
+			props.history.push(previousLocation.from);
+		} else {
+			props.history.push('/');
+		}
 	}
 
 	const handleEmail = e => {

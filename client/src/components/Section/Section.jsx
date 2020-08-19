@@ -6,7 +6,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import styles from './Section.module.css';
 
 import * as SectionUtils from './helper-functions';
-import builderContext from '../../containers/Builder/context/builder-context';
+import { BuilderContext } from '../../containers/Builder/Builder';
 import SectionContext from './section-context';
 
 import Button from '../../ui/Button/Button';
@@ -16,7 +16,7 @@ const Section = ({ id, columns, index }) => {
 	const [data, setData] = useState([]);
 	const [cols, setCols] = useState();
 	const isMounted = useRef(false);
-	const context = useContext(builderContext);
+	const context = useContext(BuilderContext);
 	
 	useEffect(_ => {
 		const initialData = [];

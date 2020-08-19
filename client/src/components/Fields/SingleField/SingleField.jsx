@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import styles from './SingleField.module.css';
 
-import builderContext from '../../../containers/Builder/context/builder-context';
+import { BuilderContext } from '../../../containers/Builder/Builder';
 import columnContext from '../../Column/column-context';
 import advancedStyleParser from '../../../advancedStyleParser/advancedStyleParser';
 
@@ -14,7 +14,7 @@ import List from '../AllFields/List/List';
 const SingleField = ({ id, data, type, customStyles, index }) => {
 	const [editing, setEditing] = useState(false);
 	const [snapshotData, setSnapshotData] = useState(null);
-	const BuilderContext = useContext(builderContext);
+	const builderContext = useContext(BuilderContext);
 	const ColumnContext = useContext(columnContext);
 
 	useEffect(_ => {
@@ -103,7 +103,7 @@ const SingleField = ({ id, data, type, customStyles, index }) => {
 							onCancel={cancelHandler}
 							onDuplicate={ColumnContext.duplicateFieldHandler}
 							onDelete={ColumnContext.deleteFieldHandler}
-							onBeautify={BuilderContext.beautifyFieldHandler}
+							onBeautify={builderContext.beautifyFieldHandler}
 							editing={editing} />
 					</div>
 				</div>

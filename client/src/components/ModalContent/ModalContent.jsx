@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ModalContent.module.css';
 
-import BuilderContext from '../../containers/Builder/context/builder-context';
+import { BuilderContext } from '../../containers/Builder/Builder';
 
 import { FiSave, FiX } from 'react-icons/fi';
 import Button from '../../ui/Button/Button';

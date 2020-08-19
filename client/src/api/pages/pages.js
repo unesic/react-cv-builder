@@ -54,12 +54,51 @@ class Page {
 		}
 	}
 
+	async getPageData(jwt, username, slug) {
+		try {
+			const page = await axios.get(`/api/v1/pages/page/${jwt}/${username}/${slug}`);
+
+			return {
+				type: 'GET_SINGLE_PAGE',
+				payload: page.data.data
+			}
+		} catch (err) {
+			return {
+				type: 'ERROR',
+				payload: err.response.data.error
+			}
+		}
+	}
+
 	async delete(id) {
 		try {
 			const res = await axios.delete(`/api/v1/pages/${id}`);
 
 			return {
 				type: 'DELETE_PAGE',
+				payload: res.data
+			}
+		} catch (err) {
+			return {
+				type: 'ERROR',
+				payload: err.response.data.error
+			}
+		}
+	}
+
+	async save(id, pageData) {
+		try {
+			const parsed = JSON.stringify(pageData).replace(/"/g, "'");
+
+			const data = {
+				id: id,
+				data: parsed
+			}
+
+			const res = await axios.patch('/api/v1/pages/save', data);
+
+			return {
+				type: 'SAVE_PAGE',
 				payload: res.data
 			}
 		} catch (err) {

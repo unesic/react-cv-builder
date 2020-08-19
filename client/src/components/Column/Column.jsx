@@ -5,7 +5,7 @@ import { FiTrash, FiCopy } from 'react-icons/fi';
 
 import styles from './Column.module.css';
 
-import BuilderContext from '../../containers/Builder/context/builder-context';
+import { BuilderContext } from '../../containers/Builder/Builder';
 import SectionContext from '../Section/section-context';
 import ColumnContext from './column-context';
 import * as SectionUtils from '../Section/helper-functions';
