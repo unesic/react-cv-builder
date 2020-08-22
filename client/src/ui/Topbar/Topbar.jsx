@@ -13,6 +13,7 @@ const Topbar = (props) => {
 		status: null,
 		message: "",
 	});
+	const [button, setButton] = useState();
 	const context = useContext(AppContext);
 	const builderContext = useContext(BuilderContext);
 
@@ -20,7 +21,6 @@ const Topbar = (props) => {
 		const id = context.pageData.payload.page._id;
 		const pageData = [...builderContext.builderState.sections];
 		const res = await context.Page.save(id, pageData);
-		console.log(builderContext.builderState.sections);
 	};
 
 	useEffect(() => {
@@ -30,6 +30,43 @@ const Topbar = (props) => {
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [context.pageData]);
+
+	useEffect(() => {
+		if (context.pageMode === "edit") {
+			setButton(
+				<Button onClick={(_) => savePage()}>
+					<FiSave /> Save page
+				</Button>
+			);
+		} else if (context.pageMode === "preview") {
+			if (context.pageData && context.pageData.payload.isOwner) {
+				setButton(
+					<Button
+						onClick={() => {
+							context.setPageMode("edit");
+							props.history.push(
+								`${props.location.pathname}?pid=${context.pageData.payload.page._id}&edit=1`
+							);
+						}}
+					>
+						<FiEdit /> Edit page
+					</Button>
+				);
+			}
+		} else if (!context.pageMode) {
+			setButton(
+				<Button
+					onClick={() => {
+						context.setModalOpen(true);
+						context.setModalContent(<NewPage />);
+					}}
+				>
+					<FiPlus /> New page
+				</Button>
+			);
+		}
+		console.log('context.pageMode: ', context.pageMode);
+	}, [context.pageMode]);
 
 	return (
 		<Navbar
@@ -81,32 +118,7 @@ const Topbar = (props) => {
 				</Nav>
 			</Navbar.Collapse>
 
-			{context.pageMode === "edit" ? (
-				<Button onClick={_ => savePage()}>
-					<FiSave /> Save page
-				</Button>
-			) : context.pageMode === "preview" ? (
-				context.pageData && context.pageData.payload.isOwner ? (
-					<Button
-						onClick={() => {
-							props.history.push(
-								`${props.location.pathname}?pid=${context.pageData.payload.page._id}&edit=1`
-							);
-						}}
-					>
-						<FiEdit /> Edit page
-					</Button>
-				) : null
-			) : !context.pageMode ? (
-				<Button
-					onClick={() => {
-						context.setModalOpen(true);
-						context.setModalContent(<NewPage />);
-					}}
-				>
-					<FiPlus /> New page
-				</Button>
-			) : null}
+			{button}
 		</Navbar>
 	);
 };

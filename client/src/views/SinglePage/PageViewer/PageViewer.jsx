@@ -21,10 +21,6 @@ const PageViewer = ({ page }) => {
 				sections: parsedData,
 			});
 		}
-
-		return () => {
-			context.setPageMode("");
-		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

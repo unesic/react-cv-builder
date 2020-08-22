@@ -11,6 +11,7 @@ const SinglePage = (props) => {
 		slug: props.match.params.slug,
 	};
 	const [loading, setLoading] = useState(true);
+	const [page, setPage] = useState();
 	const context = useContext(AppContext);
 
 	useEffect(() => {
@@ -18,6 +19,7 @@ const SinglePage = (props) => {
 
 		return () => {
 			context.setPageMode("");
+			setLoading(true);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -35,6 +37,13 @@ const SinglePage = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [context.pageData]);
 
+	useEffect(() => {
+		if (context.pageMode === "edit")
+			setPage(<PageBuilder page={context.pageData.payload.page} />);
+		else if (context.pageMode === "preview")
+			setPage(<PageViewer page={context.pageData.payload.page} />);
+	}, [context.pageMode]);
+
 	async function getPageData() {
 		const res = await context.Page.getPageData(
 			context.jwt,
@@ -44,13 +53,7 @@ const SinglePage = (props) => {
 		context.setPageData(res);
 	}
 
-	return loading ? (
-		<Spinner animation="border" />
-	) : context.pageMode === "edit" ? (
-		<PageBuilder page={context.pageData.payload.page} />
-	) : (
-		<PageViewer page={context.pageData.payload.page} />
-	);
+	return loading ? <Spinner animation="border" /> : page ? page : null;
 };
 
 export default SinglePage;
