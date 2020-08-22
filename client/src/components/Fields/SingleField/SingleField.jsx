@@ -3,6 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import styles from './SingleField.module.css';
 
 import { BuilderContext } from '../../../containers/Builder/Builder';
+import { beautifyFieldHandler } from '../../../containers/Builder/builder.utils';
 import columnContext from '../../Column/column-context';
 import advancedStyleParser from '../../../advancedStyleParser/advancedStyleParser';
 
@@ -103,7 +104,9 @@ const SingleField = ({ id, data, type, customStyles, index }) => {
 							onCancel={cancelHandler}
 							onDuplicate={ColumnContext.duplicateFieldHandler}
 							onDelete={ColumnContext.deleteFieldHandler}
-							onBeautify={builderContext.beautifyFieldHandler}
+							onBeautify={_ => {
+								beautifyFieldHandler(id, builderContext.builderState, builderContext.dispatch)
+							}}
 							editing={editing} />
 					</div>
 				</div>

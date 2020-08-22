@@ -6,9 +6,9 @@ import { FiTrash, FiCopy } from 'react-icons/fi';
 import styles from './Column.module.css';
 
 import { BuilderContext } from '../../containers/Builder/Builder';
-import SectionContext from '../Section/section-context';
+import { SectionContext } from '../Section/Section';
 import ColumnContext from './column-context';
-import * as SectionUtils from '../Section/helper-functions';
+import { duplicateField } from '../Section/section.utils';
 import * as fieldStyles from '../../components/Fields/styles/fieldStyles';
 
 import SingleField from '../../components/Fields/SingleField/SingleField';
@@ -73,7 +73,7 @@ const Column = ({ id, fields, index }) => {
 	}
 
 	const duplicateFieldHandler = fieldId => {
-		const newData = SectionUtils.duplicateField(builderContext.sections, fieldId);
+		const newData = duplicateField(builderContext.builderState.sections, fieldId);
 		setData(newData);
 		context.updateColumnData(id, newData);
 	}
@@ -118,7 +118,7 @@ const Column = ({ id, fields, index }) => {
 							<Droppable
 								droppableId={id}
 								index={index}
-								isDropDisabled={builderContext.dragging !== 'column'}
+								isDropDisabled={builderContext.builderState.dragging !== 'column'}
 								type="column"
 							>
 								{(provided, snapshot) => (

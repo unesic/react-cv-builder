@@ -1,88 +1,131 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { FiPlus, FiColumns, FiTrash, FiCopy } from 'react-icons/fi';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import React, {
+	useState,
+	useEffect,
+	useRef,
+	useContext,
+	createContext,
+} from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { FiPlus, FiColumns, FiTrash, FiCopy } from "react-icons/fi";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 
-import styles from './Section.module.css';
+import styles from "./Section.module.css";
 
-import * as SectionUtils from './helper-functions';
-import { BuilderContext } from '../../containers/Builder/Builder';
-import SectionContext from './section-context';
+import { duplicateColumn } from "./section.utils";
+import {
+	deleteSectionHandler,
+	duplicateSectionHandler,
+	setSectionData,
+} from "../../containers/Builder/builder.utils";
+import { BuilderContext } from "../../containers/Builder/Builder";
 
-import Button from '../../ui/Button/Button';
-import Column from '../Column/Column';
+import Button from "../../ui/Button/Button";
+import Column from "../Column/Column";
+
+export const SectionContext = createContext();
 
 const Section = ({ id, columns, index }) => {
 	const [data, setData] = useState([]);
 	const [cols, setCols] = useState();
 	const isMounted = useRef(false);
 	const context = useContext(BuilderContext);
-	
-	useEffect(_ => {
-		const initialData = [];
-		if (columns.length) {
-			columns.forEach(column => {
-				initialData.push({...column})
-			})
-		}
 
-		setData(initialData);
+	useEffect(
+		() => {
+			const initialData = [];
+			if (columns.length) {
+				columns.forEach((column) => {
+					initialData.push({ ...column });
+				});
+			}
+
+			setData(initialData);
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [JSON.stringify(columns)]);
+		[JSON.stringify(columns)]
+	);
 
-	useEffect(_ => {
-		if (isMounted.current) {
-			const newCols = [];
-			data.forEach((column, i) => (
-				newCols.push(<Column key={column.id} {...column} index={i} />)
-			))
+	useEffect(
+		() => {
+			if (isMounted.current) {
+				const newCols = [];
+				data.forEach((column, i) =>
+					newCols.push(
+						<Column key={column.id} {...column} index={i} />
+					)
+				);
 
-			setCols(newCols);
-		} else {
-			isMounted.current = true;
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data]);
+				setCols(newCols);
+			} else {
+				isMounted.current = true;
+			}
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		},
+		[data]
+	);
 
-	const newColumnHandler = _ => {
-		const newData = data ? data.map(f => ({...f})) : [];
+	const newColumnHandler = () => {
+		const newData = data ? data.map((f) => ({ ...f })) : [];
 
 		newData.push({
-			id: 'column-id-' + new Date().valueOf(),
+			id: "column-id-" + new Date().valueOf(),
 			fields: [],
-		})
+		});
 
 		setData(newData);
-		context.setSectionData(id, newData);
-	}
+		setSectionData(
+			id,
+			newData,
+			context.builderState,
+			context.dispatch
+		);
+	};
 
 	const updateColumnData = (columnId, updatedData) => {
 		if (updatedData.length) {
-			const newData = data.map(c => ({...c}));
-			const current = newData.find(column => column.id === columnId);
-			const old = data.find(column => column.id === columnId);
+			const newData = data.map((c) => ({ ...c }));
+			const current = newData.find((column) => column.id === columnId);
+			const old = data.find((column) => column.id === columnId);
 			const index = newData.indexOf(current);
-			current.fields = [...updatedData]
-			
-			if ({...current}.fields !== {...old}.fields) {
+			current.fields = [...updatedData];
+
+			if ({ ...current }.fields !== { ...old }.fields) {
 				newData[index] = current;
 				setData(newData);
-				context.setSectionData(id, newData);
+				setSectionData(
+					id,
+					newData,
+					context.builderState,
+					context.dispatch
+				);
 			}
 		}
-	}
+	};
 
-	const duplicateColumnHandler = columnId => {
-		const newData = SectionUtils.duplicateColumn(context.sections, columnId);
+	const duplicateColumnHandler = (columnId) => {
+		const newData = duplicateColumn(
+			context.builderState.sections,
+			columnId
+		);
 		setData(newData);
-		context.setSectionData(id, newData);
-	}
+		setSectionData(
+			id,
+			newData,
+			context.builderState,
+			context.dispatch
+		);
+	};
 
-	const deleteColumnHandler = columnId => {
-		const newData = [...data].filter(column => column.id !== columnId);
+	const deleteColumnHandler = (columnId) => {
+		const newData = [...data].filter((column) => column.id !== columnId);
 		setData(newData);
-		context.setSectionData(id, newData);
-	}
+		setSectionData(
+			id,
+			newData,
+			context.builderState,
+			context.dispatch
+		);
+	};
 
 	return (
 		<Draggable draggableId={id} index={index}>
@@ -95,7 +138,9 @@ const Section = ({ id, columns, index }) => {
 				>
 					<Droppable
 						droppableId={id}
-						isDropDisabled={context.dragging !== 'section'}
+						isDropDisabled={
+							context.builderState.dragging !== "section"
+						}
 						direction="horizontal"
 						type="section"
 					>
@@ -117,17 +162,34 @@ const Section = ({ id, columns, index }) => {
 							</Row>
 						)}
 					</Droppable>
-					
+
 					<Row className={styles.ButtonsRow}>
 						<Col className="d-flex justify-content-center my-2">
 							<Button clicked={newColumnHandler}>
-								<FiPlus /><FiColumns />
+								<FiPlus />
+								<FiColumns />
 							</Button>
-							<Button clicked={_ => context.deleteSectionHandler(id)}>
+							<Button
+								clicked={() =>
+									deleteSectionHandler(
+										id,
+										context.builderState,
+										context.dispatch
+									)
+								}
+							>
 								<FiTrash />
 							</Button>
-							<Button clicked={_ => context.duplicateSectionHandler(id)}>
-								<FiCopy/>
+							<Button
+								clicked={() =>
+									duplicateSectionHandler(
+										id,
+										context.builderState,
+										context.dispatch
+									)
+								}
+							>
+								<FiCopy />
 							</Button>
 						</Col>
 					</Row>
@@ -135,6 +197,6 @@ const Section = ({ id, columns, index }) => {
 			)}
 		</Draggable>
 	);
-}
- 
+};
+
 export default Section;
